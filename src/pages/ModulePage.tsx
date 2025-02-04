@@ -2,6 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { LoadingScreen } from "@/components/ui/loading";
+import { TopBar } from "@/components/layout/TopBar";
+import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
+import { Clock } from "lucide-react";
 
 const ModulePage = () => {
   const { courseId, moduleId } = useParams();
@@ -14,7 +17,8 @@ const ModulePage = () => {
         .select(`
           *,
           course:course_id (
-            name
+            name,
+            thumbnail_url
           )
         `)
         .eq('id', parseInt(moduleId!))
@@ -45,16 +49,74 @@ const ModulePage = () => {
     return <LoadingScreen />;
   }
 
+  if (!moduleData || !lessons) {
+    return null;
+  }
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
   return (
-    <div>
-      <h1>{moduleData?.course?.name} - {moduleData?.name}</h1>
-      <div className="grid gap-4">
-        {lessons?.map((lesson) => (
-          <div key={lesson.id} className="p-4 border rounded">
-            <h2>{lesson.name}</h2>
-            <p>{lesson.description}</p>
+    <div className="min-h-screen bg-background">
+      <TopBar />
+      <Breadcrumbs />
+      
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="flex items-start gap-8">
+          {/* Main Content */}
+          <div className="flex-1">
+            <div className="flex items-center gap-8 mb-8">
+              <div>
+                <h1 className="text-4xl font-bold mb-2">{moduleData.name}</h1>
+                <p className="text-muted-foreground">{lessons.length} lessons</p>
+              </div>
+              {moduleData.course.thumbnail_url && (
+                <img 
+                  src={moduleData.course.thumbnail_url} 
+                  alt={moduleData.course.name}
+                  className="w-32 h-32 rounded-lg object-cover"
+                />
+              )}
+            </div>
+
+            <div className="space-y-4">
+              {lessons.map((lesson) => (
+                <a
+                  key={lesson.id}
+                  href={`/course/${courseId}/module/${moduleId}/lesson/${lesson.id}`}
+                  className="block p-4 rounded-lg bg-card hover:bg-secondary/50 transition-colors"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="w-48 h-28 bg-muted rounded-lg overflow-hidden shrink-0">
+                      {lesson.thumbnail_url ? (
+                        <img 
+                          src={lesson.thumbnail_url} 
+                          alt={lesson.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-secondary">
+                          <span className="text-secondary-foreground">No thumbnail</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg font-semibold mb-2">{lesson.name}</h3>
+                      <p className="text-muted-foreground text-sm line-clamp-2">{lesson.description}</p>
+                    </div>
+                    <div className="flex items-center gap-1 text-muted-foreground shrink-0">
+                      <Clock className="w-4 h-4" />
+                      <span className="text-sm">{formatTime(lesson.length_sec)}</span>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
           </div>
-        ))}
+        </div>
       </div>
     </div>
   );
