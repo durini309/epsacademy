@@ -1,4 +1,5 @@
 
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Breadcrumb,
@@ -60,8 +61,8 @@ export const Breadcrumbs = () => {
               {index === items.length - 1 ? (
                 <BreadcrumbPage>{item.label}</BreadcrumbPage>
               ) : (
-                <BreadcrumbLink as={Link} to={item.href}>
-                  {item.label}
+                <BreadcrumbLink asChild>
+                  <Link to={item.href}>{item.label}</Link>
                 </BreadcrumbLink>
               )}
             </BreadcrumbItem>

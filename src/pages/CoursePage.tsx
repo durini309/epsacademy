@@ -50,9 +50,11 @@ const CoursePage = () => {
                   <h3 className="font-semibold">¿Qué es un Programador Superior?</h3>
                   <Progress value={33} className="mt-2" />
                 </div>
-                <Button as={Link} to={continueLink}>
-                  Continue
-                  <ChevronRight className="ml-2 h-4 w-4" />
+                <Button asChild>
+                  <Link to={continueLink}>
+                    Continue
+                    <ChevronRight className="ml-2 h-4 w-4" />
+                  </Link>
                 </Button>
               </div>
             </Card>
@@ -71,13 +73,11 @@ const CoursePage = () => {
                           {module.sections.length} lecciones
                         </CardDescription>
                       </div>
-                      <Button 
-                        variant="outline"
-                        as={Link}
-                        to={`/module/${module.id}/section/${module.sections[0].id}`}
-                      >
-                        Ver módulo
-                        <ChevronRight className="ml-2 h-4 w-4" />
+                      <Button variant="outline" asChild>
+                        <Link to={`/module/${module.id}/section/${module.sections[0].id}`}>
+                          Ver módulo
+                          <ChevronRight className="ml-2 h-4 w-4" />
+                        </Link>
                       </Button>
                     </div>
                   </CardHeader>
