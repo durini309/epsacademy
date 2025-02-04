@@ -20,7 +20,7 @@ const CoursePage = () => {
   const firstModule = course.modules[0];
   const firstSection = firstModule?.sections[0];
   const continueLink = firstSection 
-    ? `/module/${firstModule.id}/section/${firstSection.id}`
+    ? `/course/${courseId}/module/${firstModule.id}/lesson/${firstSection.id}`
     : "#";
 
   return (
@@ -74,7 +74,7 @@ const CoursePage = () => {
                         </CardDescription>
                       </div>
                       <Button variant="outline" asChild>
-                        <Link to={`/module/${module.id}/section/${module.sections[0].id}`}>
+                        <Link to={`/course/${courseId}/module/${module.id}/lesson/${module.sections[0].id}`}>
                           Ver módulo
                           <ChevronRight className="ml-2 h-4 w-4" />
                         </Link>

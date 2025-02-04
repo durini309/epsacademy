@@ -22,7 +22,7 @@ export const Breadcrumbs = () => {
     
     // Handle course names
     if (segment === "course") return acc;
-    if (index === 1) { // This is a course ID
+    if (pathSegments[index - 1] === "course") { // This is a course ID
       const course = courses.find(c => c.id === segment);
       if (course) label = course.title;
     }
@@ -37,9 +37,9 @@ export const Breadcrumbs = () => {
       if (module) label = module.title;
     }
     
-    // Handle section names
-    if (segment === "section") return acc;
-    if (pathSegments[index - 1] === "section") {
+    // Handle lesson names
+    if (segment === "lesson") return acc;
+    if (pathSegments[index - 1] === "lesson") {
       const courseId = pathSegments[1];
       const course = courses.find(c => c.id === courseId);
       const moduleId = parseInt(pathSegments[3]);

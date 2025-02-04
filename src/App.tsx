@@ -18,7 +18,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/course/:courseId" element={<CoursePage />} />
-          <Route path="/module/:moduleId/section/:sectionId" element={<SectionPage />} />
+          <Route path="/course/:courseId/module/:moduleId/lesson/:sectionId" element={<SectionPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Toaster />
