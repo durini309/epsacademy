@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { TopBar } from "@/components/layout/TopBar";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { ChevronRight } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { Course, Module } from "@/types/database";
 import { LoadingScreen } from "@/components/ui/loading";
@@ -34,17 +33,33 @@ const CoursePage = () => {
 
       const { data: userProgress, error: progressError } = await supabase
         .from('user_course')
-        .select('progress, currnent_lesson_id')
+        .select('currnent_lesson_id')
         .eq('course_id', parseInt(courseId || '0'))
         .maybeSingle();
 
       if (progressError) throw progressError;
 
+      let currentLesson = null;
+      if (userProgress?.currnent_lesson_id) {
+        const { data: lesson } = await supabase
+          .from('lesson')
+          .select(`
+            *,
+            module:module_id (
+              id,
+              name
+            )
+          `)
+          .eq('id', userProgress.currnent_lesson_id)
+          .single();
+        
+        currentLesson = lesson;
+      }
+
       return {
         course: course as Course,
         modules: modules as Module[],
-        progress: userProgress?.progress || 0,
-        currentLessonId: userProgress?.currnent_lesson_id
+        currentLesson
       };
     },
   });
@@ -53,7 +68,7 @@ const CoursePage = () => {
     return <LoadingScreen />;
   }
 
-  const { course, modules, progress, currentLessonId } = courseData;
+  const { course, modules, currentLesson } = courseData;
 
   return (
     <div>
@@ -75,16 +90,23 @@ const CoursePage = () => {
             </div>
             
             {/* Continue Learning Section */}
-            {progress > 0 && currentLessonId && (
-              <Card className="mb-6 bg-muted">
+            {currentLesson && (
+              <Card className="mb-6 bg-secondary/30">
                 <div className="flex items-center gap-4 p-4">
+                  <div className="w-24 h-16 bg-secondary rounded overflow-hidden shrink-0">
+                    <img 
+                      src={currentLesson.thumbnail_url} 
+                      alt={currentLesson.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                   <div className="flex-1">
-                    <p className="text-sm text-muted-foreground">Continue learning</p>
-                    <Progress value={progress} className="mt-2" />
+                    <p className="text-sm text-muted-foreground">Continuar aprendiendo</p>
+                    <h3 className="font-semibold">{currentLesson.name}</h3>
                   </div>
                   <Button asChild>
-                    <Link to={`/course/${courseId}/module/${modules[0]?.id}/lesson/${currentLessonId}`}>
-                      Continue
+                    <Link to={`/course/${courseId}/module/${currentLesson.module.id}/lesson/${currentLesson.id}`}>
+                      Continuar
                       <ChevronRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
