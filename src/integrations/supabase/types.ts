@@ -125,6 +125,7 @@ export type Database = {
           auth_id: string | null
           created_at: string
           email: string
+          first_login: boolean
           full_name: string | null
           id: number
           password: string
@@ -133,6 +134,7 @@ export type Database = {
           auth_id?: string | null
           created_at?: string
           email: string
+          first_login?: boolean
           full_name?: string | null
           id?: number
           password: string
@@ -141,6 +143,7 @@ export type Database = {
           auth_id?: string | null
           created_at?: string
           email?: string
+          first_login?: boolean
           full_name?: string | null
           id?: number
           password?: string
