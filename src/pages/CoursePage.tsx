@@ -1,27 +1,49 @@
 
 import { useParams, Link } from "react-router-dom";
-import { courses } from "@/lib/modules";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
 import { TopBar } from "@/components/layout/TopBar";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
+import { ChevronRight } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { supabase } from "@/integrations/supabase/client";
+import { Course, Module } from "@/types/database";
 
 const CoursePage = () => {
   const { courseId } = useParams();
-  const course = courses.find(c => c.id === courseId);
 
-  if (!course) {
-    return <div>Curso no encontrado</div>;
+  const { data: courseData, isLoading } = useQuery({
+    queryKey: ['course', courseId],
+    queryFn: async () => {
+      const { data: course, error: courseError } = await supabase
+        .from('course')
+        .select('*')
+        .eq('id', courseId)
+        .single();
+
+      if (courseError) throw courseError;
+
+      const { data: modules, error: modulesError } = await supabase
+        .from('module')
+        .select('*')
+        .eq('course_id', courseId)
+        .order('id');
+
+      if (modulesError) throw modulesError;
+
+      return {
+        course: course as Course,
+        modules: modules as Module[]
+      };
+    },
+  });
+
+  if (isLoading || !courseData) {
+    return <div>Loading...</div>;
   }
 
-  // Get first section of first module for continue learning
-  const firstModule = course.modules[0];
-  const firstSection = firstModule?.sections[0];
-  const continueLink = firstSection 
-    ? `/course/${courseId}/module/${firstModule.id}/lesson/${firstSection.id}`
-    : "#";
+  const { course, modules } = courseData;
 
   return (
     <div>
@@ -30,14 +52,14 @@ const CoursePage = () => {
       <div className="max-w-4xl mx-auto p-4 space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-3xl">{course.title}</CardTitle>
+            <CardTitle className="text-3xl">{course.name}</CardTitle>
             <CardDescription className="text-lg">{course.description}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="aspect-video mb-6">
               <img 
-                src={course.imageUrl} 
-                alt={course.title} 
+                src={course.thumbnail_url} 
+                alt={course.name} 
                 className="w-full h-full object-cover rounded-lg"
               />
             </div>
@@ -46,12 +68,11 @@ const CoursePage = () => {
             <Card className="mb-6 bg-muted">
               <div className="flex items-center gap-4 p-4">
                 <div className="flex-1">
-                  <p className="text-sm text-muted-foreground">Continue learning: Module 1, Lesson 1</p>
-                  <h3 className="font-semibold">¿Qué es un Programador Superior?</h3>
+                  <p className="text-sm text-muted-foreground">Continue learning</p>
                   <Progress value={33} className="mt-2" />
                 </div>
                 <Button asChild>
-                  <Link to={continueLink}>
+                  <Link to={`/course/${courseId}/module/${modules[0]?.id}`}>
                     Continue
                     <ChevronRight className="ml-2 h-4 w-4" />
                   </Link>
@@ -61,17 +82,14 @@ const CoursePage = () => {
 
             {/* Modules List */}
             <div className="space-y-4">
-              {course.modules.map((module) => (
+              {modules.map((module) => (
                 <Card key={module.id}>
                   <CardHeader>
                     <div className="flex justify-between items-center">
                       <div>
                         <CardTitle className="text-xl">
-                          {module.title}
+                          {module.name}
                         </CardTitle>
-                        <CardDescription>
-                          {module.sections.length} lecciones
-                        </CardDescription>
                       </div>
                       <Button variant="outline" asChild>
                         <Link to={`/course/${courseId}/module/${module.id}`}>
