@@ -6,6 +6,8 @@ import { ResourcesList } from "@/components/section/ResourcesList";
 import { NavigationPanel } from "@/components/section/NavigationPanel";
 import { NavigationButtons } from "@/components/section/NavigationButtons";
 import { findSectionData } from "@/lib/modules";
+import { TopBar } from "@/components/layout/TopBar";
+import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 
 export default function SectionPage() {
   const { moduleId, sectionId } = useParams();
@@ -27,39 +29,43 @@ export default function SectionPage() {
   const totalSections = module.sections.length;
   
   return (
-    <div className="flex gap-6 max-w-[1600px] mx-auto p-4">
-      {/* Main content */}
-      <div className="flex-1 space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>{section.title}</CardTitle>
-            <CardDescription>{section.description}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {section.type === "video" && section.videoUrl && (
-              <VideoPlayer url={section.videoUrl} />
-            )}
-            
-            <ResourcesList resources={section.resources || []} />
-          </CardContent>
-        </Card>
-        
-        <NavigationButtons
-          prevSection={prevSection}
-          nextSection={nextSection}
-        />
-      </div>
+    <div>
+      <TopBar />
+      <Breadcrumbs />
+      <div className="flex gap-6 max-w-[1600px] mx-auto p-4">
+        {/* Main content */}
+        <div className="flex-1 space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>{section.title}</CardTitle>
+              <CardDescription>{section.description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {section.type === "video" && section.videoUrl && (
+                <VideoPlayer url={section.videoUrl} />
+              )}
+              
+              <ResourcesList resources={section.resources || []} />
+            </CardContent>
+          </Card>
+          
+          <NavigationButtons
+            prevSection={prevSection}
+            nextSection={nextSection}
+          />
+        </div>
 
-      {/* Right navigation panel */}
-      <div className="w-80 shrink-0">
-        <NavigationPanel
-          moduleTitle={module.title}
-          currentSection={currentSectionIndex}
-          totalSections={totalSections}
-          sections={module.sections}
-          moduleId={moduleId}
-          currentSectionId={sectionId}
-        />
+        {/* Right navigation panel */}
+        <div className="w-80 shrink-0">
+          <NavigationPanel
+            moduleTitle={module.title}
+            currentSection={currentSectionIndex}
+            totalSections={totalSections}
+            sections={module.sections}
+            moduleId={moduleId}
+            currentSectionId={sectionId}
+          />
+        </div>
       </div>
     </div>
   );
