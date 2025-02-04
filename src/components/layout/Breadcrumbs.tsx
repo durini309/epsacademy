@@ -31,7 +31,7 @@ export const Breadcrumbs = () => {
         const { data: course } = await supabase
           .from("course")
           .select("name")
-          .eq("id", pathSegments[courseIndex + 1])
+          .eq("id", parseInt(pathSegments[courseIndex + 1]))
           .maybeSingle();
         if (course) data.courseName = course.name;
       }
@@ -42,7 +42,7 @@ export const Breadcrumbs = () => {
         const { data: module } = await supabase
           .from("module")
           .select("name")
-          .eq("id", pathSegments[moduleIndex + 1])
+          .eq("id", parseInt(pathSegments[moduleIndex + 1]))
           .maybeSingle();
         if (module) data.moduleName = module.name;
       }
@@ -53,7 +53,7 @@ export const Breadcrumbs = () => {
         const { data: lesson } = await supabase
           .from("lesson")
           .select("name")
-          .eq("id", pathSegments[lessonIndex + 1])
+          .eq("id", parseInt(pathSegments[lessonIndex + 1]))
           .maybeSingle();
         if (lesson) data.lessonName = lesson.name;
       }

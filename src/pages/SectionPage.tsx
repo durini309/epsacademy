@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -20,7 +19,7 @@ export default function SectionPage() {
       const { data: module, error: moduleError } = await supabase
         .from('module')
         .select('*')
-        .eq('id', moduleId)
+        .eq('id', parseInt(moduleId || '0'))
         .single();
 
       if (moduleError) throw moduleError;
@@ -28,31 +27,20 @@ export default function SectionPage() {
       const { data: lessons, error: lessonsError } = await supabase
         .from('lesson')
         .select('*')
-        .eq('module_id', moduleId)
+        .eq('module_id', parseInt(moduleId || '0'))
         .order('order');
 
       if (lessonsError) throw lessonsError;
 
-      const currentLessonIndex = lessons.findIndex(l => l.id.toString() === sectionId);
+      const currentLessonIndex = lessons.findIndex(l => l.id === parseInt(sectionId || '0'));
       const currentLesson = lessons[currentLessonIndex];
       
       if (!currentLesson) throw new Error('Lesson not found');
-
-      const prevLesson = currentLessonIndex > 0 ? lessons[currentLessonIndex - 1] : null;
-      const nextLesson = currentLessonIndex < lessons.length - 1 ? lessons[currentLessonIndex + 1] : null;
 
       return {
         module: module as Module,
         lessons: lessons as Lesson[],
         currentLesson,
-        prevSection: prevLesson ? {
-          moduleId: moduleId!,
-          section: { id: prevLesson.id.toString(), title: "Lección anterior" }
-        } : null,
-        nextSection: nextLesson ? {
-          moduleId: moduleId!,
-          section: { id: nextLesson.id.toString(), title: "Siguiente lección" }
-        } : null
       };
     },
   });
@@ -61,10 +49,10 @@ export default function SectionPage() {
     return <div>Loading...</div>;
   }
   
-  const { module, lessons, currentLesson, prevSection, nextSection } = sectionData;
+  const { module, lessons, currentLesson } = sectionData;
   
   // Calculate current section number and total sections
-  const currentSectionIndex = lessons.findIndex(l => l.id.toString() === sectionId) + 1;
+  const currentSectionIndex = lessons.findIndex(l => l.id === parseInt(sectionId || '0')) + 1;
   const totalSections = lessons.length;
 
   const mappedLessons = lessons.map(lesson => ({
@@ -95,8 +83,8 @@ export default function SectionPage() {
           </Card>
           
           <NavigationButtons
-            prevSection={prevSection}
-            nextSection={nextSection}
+            moduleId={moduleId || ''}
+            currentLesson={currentLesson}
           />
         </div>
 

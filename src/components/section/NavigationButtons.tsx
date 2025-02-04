@@ -5,13 +5,15 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 interface NavigationButtonsProps {
   moduleId: string;
   currentLesson: {
-    id: string;
+    id: number;
     next_lesson_id: number | null;
     previous_lesson_id: number | null;
-  };
+  } | null;
 }
 
 export const NavigationButtons = ({ moduleId, currentLesson }: NavigationButtonsProps) => {
+  if (!currentLesson) return null;
+
   return (
     <div className="flex justify-between items-center">
       {currentLesson.previous_lesson_id ? (
