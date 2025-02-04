@@ -74,7 +74,7 @@ const CoursePage = () => {
                         </CardDescription>
                       </div>
                       <Button variant="outline" asChild>
-                        <Link to={`/course/${courseId}/module/${module.id}/lesson/${module.sections[0].id}`}>
+                        <Link to={`/course/${courseId}/module/${module.id}`}>
                           Ver módulo
                           <ChevronRight className="ml-2 h-4 w-4" />
                         </Link>
