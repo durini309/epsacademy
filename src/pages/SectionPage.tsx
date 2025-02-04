@@ -2,9 +2,8 @@ import { useParams, Link } from "react-router-dom";
 import { CourseLayout } from "@/components/CourseLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, Play } from "lucide-react";
 
-// Helper function to find section data
 const findSectionData = (moduleId: string, sectionId: string) => {
   const module = modules.find(m => m.id === parseInt(moduleId));
   if (!module) return null;
@@ -142,69 +141,113 @@ export default function SectionPage() {
   
   const { module, section, prevSection, nextSection } = sectionData;
   
+  // Calculate current section number and total sections
+  const currentSectionIndex = module.sections.findIndex(s => s.id === sectionId) + 1;
+  const totalSections = module.sections.length;
+  
   return (
     <CourseLayout>
-      <div className="max-w-4xl mx-auto space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>{section.title}</CardTitle>
-            <CardDescription>{section.description}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {section.type === "video" && section.videoUrl && (
-              <div className="aspect-video mb-6">
-                <iframe
-                  className="w-full h-full rounded-lg"
-                  src={section.videoUrl}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
+      <div className="flex gap-6 max-w-[1600px] mx-auto">
+        {/* Main content */}
+        <div className="flex-1 space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>{section.title}</CardTitle>
+              <CardDescription>{section.description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {section.type === "video" && section.videoUrl && (
+                <div className="aspect-video mb-6">
+                  <iframe
+                    className="w-full h-full rounded-lg"
+                    src={section.videoUrl}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              )}
+              
+              {section.resources && section.resources.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold mb-3">Recursos Adicionales</h3>
+                  <div className="space-y-2">
+                    {section.resources.map((resource, index) => (
+                      <a
+                        key={index}
+                        href={resource.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-primary hover:underline"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        {resource.title}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          
+          <div className="flex justify-between items-center">
+            {prevSection ? (
+              <Link to={`/module/${prevSection.moduleId}/section/${prevSection.section.id}`}>
+                <Button variant="outline">
+                  <ChevronLeft className="mr-2" />
+                  {prevSection.section.title}
+                </Button>
+              </Link>
+            ) : (
+              <div /> // Empty div for spacing
             )}
             
-            {section.resources && section.resources.length > 0 && (
-              <div className="mt-6">
-                <h3 className="text-lg font-semibold mb-3">Recursos Adicionales</h3>
-                <div className="space-y-2">
-                  {section.resources.map((resource, index) => (
-                    <a
-                      key={index}
-                      href={resource.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-primary hover:underline"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                      {resource.title}
-                    </a>
-                  ))}
-                </div>
-              </div>
+            {nextSection && (
+              <Link to={`/module/${nextSection.moduleId}/section/${nextSection.section.id}`}>
+                <Button>
+                  {nextSection.section.title}
+                  <ChevronRight className="ml-2" />
+                </Button>
+              </Link>
             )}
-          </CardContent>
-        </Card>
-        
-        <div className="flex justify-between items-center">
-          {prevSection ? (
-            <Link to={`/module/${prevSection.moduleId}/section/${prevSection.section.id}`}>
-              <Button variant="outline">
-                <ChevronLeft className="mr-2" />
-                {prevSection.section.title}
-              </Button>
-            </Link>
-          ) : (
-            // Empty div for spacing
-            <div />
-          )}
-          
-          {nextSection && (
-            <Link to={`/module/${nextSection.moduleId}/section/${nextSection.section.id}`}>
-              <Button>
-                {nextSection.section.title}
-                <ChevronRight className="ml-2" />
-              </Button>
-            </Link>
-          )}
+          </div>
+        </div>
+
+        {/* Right navigation panel */}
+        <div className="w-80 shrink-0">
+          <Card className="sticky top-4">
+            <CardHeader>
+              <CardTitle className="text-lg">{module.title}</CardTitle>
+              <CardDescription>Lección {currentSectionIndex} de {totalSections}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {module.sections.map((moduleSection) => (
+                <Link
+                  key={moduleSection.id}
+                  to={`/module/${moduleId}/section/${moduleSection.id}`}
+                  className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
+                    moduleSection.id === sectionId
+                      ? "bg-secondary"
+                      : "hover:bg-secondary/50"
+                  }`}
+                >
+                  <div className="w-24 h-16 bg-muted rounded flex items-center justify-center shrink-0">
+                    <Play className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium truncate">
+                      {moduleSection.title}
+                    </p>
+                    {moduleSection.type === "video" && (
+                      <p className="text-xs text-muted-foreground">Video</p>
+                    )}
+                    {moduleSection.type === "pdf" && (
+                      <p className="text-xs text-muted-foreground">PDF</p>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </CourseLayout>
