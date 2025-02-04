@@ -1,3 +1,4 @@
+
 export type Course = {
   id: string;
   title: string;
@@ -132,7 +133,14 @@ export const courses: Course[] = [
 ];
 
 export const findSectionData = (moduleId: string, sectionId: string) => {
-  const module = modules.find(m => m.id === parseInt(moduleId));
+  // Find the course that contains this module
+  const course = courses.find(course => 
+    course.modules.some(m => m.id === parseInt(moduleId))
+  );
+  
+  if (!course) return null;
+  
+  const module = course.modules.find(m => m.id === parseInt(moduleId));
   if (!module) return null;
   
   const sectionIndex = module.sections.findIndex(s => s.id === sectionId);
@@ -140,7 +148,6 @@ export const findSectionData = (moduleId: string, sectionId: string) => {
   
   const section = module.sections[sectionIndex];
   
-  // Calculate previous and next sections
   const prevSection = sectionIndex > 0 ? 
     { moduleId, section: module.sections[sectionIndex - 1] } :
     null;
