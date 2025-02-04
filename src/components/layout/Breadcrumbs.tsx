@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Home } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -25,7 +26,6 @@ export const Breadcrumbs = () => {
     const fetchNames = async () => {
       const data: BreadcrumbData = {};
       
-      // Find course ID and fetch course name
       const courseIndex = pathSegments.indexOf("course");
       if (courseIndex !== -1 && pathSegments[courseIndex + 1]) {
         const { data: course } = await supabase
@@ -36,7 +36,6 @@ export const Breadcrumbs = () => {
         if (course) data.courseName = course.name;
       }
 
-      // Find module ID and fetch module name
       const moduleIndex = pathSegments.indexOf("module");
       if (moduleIndex !== -1 && pathSegments[moduleIndex + 1]) {
         const { data: module } = await supabase
@@ -47,7 +46,6 @@ export const Breadcrumbs = () => {
         if (module) data.moduleName = module.name;
       }
 
-      // Find lesson ID and fetch lesson name
       const lessonIndex = pathSegments.indexOf("lesson");
       if (lessonIndex !== -1 && pathSegments[lessonIndex + 1]) {
         const { data: lesson } = await supabase
@@ -64,24 +62,20 @@ export const Breadcrumbs = () => {
     fetchNames();
   }, [location.pathname]);
 
-  // Build breadcrumb items based on current path
   const items = pathSegments.reduce<Array<{ href: string; label: string }>>((acc, segment, index) => {
     const path = `/${pathSegments.slice(0, index + 1).join("/")}`;
     let label = segment;
     
-    // Handle course names
     if (segment === "course") return acc;
     if (pathSegments[index - 1] === "course") {
       if (names.courseName) label = names.courseName;
     }
     
-    // Handle module names
     if (segment === "module") return acc;
     if (pathSegments[index - 1] === "module") {
       if (names.moduleName) label = names.moduleName;
     }
     
-    // Handle lesson names
     if (segment === "lesson") return acc;
     if (pathSegments[index - 1] === "lesson") {
       if (names.lessonName) label = names.lessonName;
@@ -101,7 +95,13 @@ export const Breadcrumbs = () => {
                 <BreadcrumbPage>{item.label}</BreadcrumbPage>
               ) : (
                 <BreadcrumbLink asChild>
-                  <Link to={item.href}>{item.label}</Link>
+                  <Link to={item.href}>
+                    {item.href === "/" ? (
+                      <Home className="h-4 w-4" />
+                    ) : (
+                      item.label
+                    )}
+                  </Link>
                 </BreadcrumbLink>
               )}
             </BreadcrumbItem>

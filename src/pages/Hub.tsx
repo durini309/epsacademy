@@ -1,14 +1,29 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { Link, Navigate } from "react-router-dom";
 import { TopBar } from "@/components/layout/TopBar";
 import { supabase } from "@/integrations/supabase/client";
 import { Course } from "@/types/database";
 import { useAuthStore } from "@/lib/auth";
+import { LoadingScreen } from "@/components/ui/loading";
 
 const Hub = () => {
   const user = useAuthStore((state) => state.user);
   
+  const { data: userData } = useQuery({
+    queryKey: ['user-data'],
+    queryFn: async () => {
+      const { data: userData, error } = await supabase
+        .from('user')
+        .select('full_name, first_login')
+        .eq('auth_id', user?.id)
+        .single();
+      
+      if (error) throw error;
+      return userData;
+    },
+    enabled: !!user,
+  });
+
   const { data: courses, isLoading } = useQuery({
     queryKey: ['enrolled-courses'],
     queryFn: async () => {
@@ -34,8 +49,12 @@ const Hub = () => {
     return <Navigate to="/" replace />;
   }
 
+  if (userData?.first_login) {
+    return <Navigate to="/password" replace />;
+  }
+
   if (isLoading) {
-    return <div>Cargando...</div>;
+    return <LoadingScreen />;
   }
 
   return (
@@ -45,7 +64,7 @@ const Hub = () => {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-primary">Mis Cursos</h1>
           <p className="text-xl text-foreground">
-            Bienvenido, {user.user_metadata.full_name || user.email}
+            Bienvenido, {userData?.full_name || user.email}
           </p>
         </div>
         

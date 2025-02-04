@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuthStore } from "@/lib/auth";
@@ -28,6 +27,9 @@ const Index = () => {
       });
 
       if (error) throw error;
+      
+      // Store email for password change page
+      localStorage.setItem("userEmail", email);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Error al iniciar sesión");
     } finally {

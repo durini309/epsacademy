@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -8,18 +7,27 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UserRound } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export const TopBar = () => {
-  const handleLogout = () => {
-    // TODO: Implement logout functionality
-    console.log("Logout clicked");
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      navigate("/");
+    } catch (error) {
+      toast.error("Error al cerrar sesión");
+    }
   };
 
   return (
     <div className="border-b">
       <div className="flex h-16 items-center px-4 max-w-7xl mx-auto">
         <a href="/" className="flex items-center gap-2">
-          {/* Placeholder logo */}
           <div className="w-8 h-8 bg-primary rounded flex items-center justify-center text-primary-foreground font-bold">
             L
           </div>
@@ -39,7 +47,7 @@ export const TopBar = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={handleLogout}>
-                Logout
+                Cerrar sesión
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
