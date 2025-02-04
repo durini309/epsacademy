@@ -18,6 +18,10 @@ const PasswordChange = () => {
     setLoading(true);
 
     try {
+      if (password.length < 6) {
+        throw new Error("La contraseña debe tener al menos 6 caracteres");
+      }
+
       const { error: updateError } = await supabase.auth.updateUser({
         password: password,
       });

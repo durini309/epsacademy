@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ const Index = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const user = useAuthStore((state) => state.user);
+  const navigate = useNavigate();
 
   if (user) {
     return <Navigate to="/hub" replace />;
@@ -21,15 +22,31 @@ const Index = () => {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) throw error;
+      if (signInError) throw signInError;
       
       // Store email for password change page
       localStorage.setItem("userEmail", email);
+
+      // Check if it's first login
+      const { data: userData, error: userError } = await supabase
+        .from('user')
+        .select('first_login')
+        .eq('auth_id', (await supabase.auth.getUser()).data.user?.id)
+        .single();
+
+      if (userError) throw userError;
+
+      // Redirect based on first_login status
+      if (userData.first_login) {
+        navigate('/password');
+      } else {
+        navigate('/hub');
+      }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Error al iniciar sesión");
     } finally {
