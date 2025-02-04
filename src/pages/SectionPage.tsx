@@ -10,9 +10,12 @@ import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { supabase } from "@/integrations/supabase/client";
 import { Module, Lesson } from "@/types/database";
 import { LoadingScreen } from "@/components/ui/loading";
+import { useAuthStore } from "@/lib/auth";
+import { useEffect } from "react";
 
 export default function SectionPage() {
   const { courseId, moduleId, sectionId } = useParams();
+  const user = useAuthStore((state) => state.user);
   
   const { data: sectionData, isLoading } = useQuery({
     queryKey: ['lesson', moduleId, sectionId],
@@ -46,6 +49,29 @@ export default function SectionPage() {
     },
   });
 
+  // Update current_lesson_id when viewing a lesson
+  useEffect(() => {
+    if (sectionData?.currentLesson && user) {
+      const updateCurrentLesson = async () => {
+        const { data: userData } = await supabase
+          .from('user')
+          .select('id')
+          .eq('auth_id', user.id)
+          .single();
+
+        if (userData) {
+          await supabase
+            .from('user_course')
+            .update({ currnent_lesson_id: sectionData.currentLesson.id })
+            .eq('user_id', userData.id)
+            .eq('course_id', parseInt(courseId || '0'));
+        }
+      };
+
+      updateCurrentLesson();
+    }
+  }, [sectionData?.currentLesson, user, courseId]);
+
   if (isLoading || !sectionData) {
     return <LoadingScreen />;
   }
@@ -59,7 +85,9 @@ export default function SectionPage() {
   const mappedLessons = lessons.map(lesson => ({
     id: lesson.id.toString(),
     title: lesson.name,
-    type: "video" as const
+    type: "video" as const,
+    thumbnailUrl: lesson.thumbnail_url,
+    order: lesson.order
   }));
   
   return (
@@ -67,7 +95,6 @@ export default function SectionPage() {
       <TopBar />
       <Breadcrumbs />
       <div className="flex gap-6 max-w-[1600px] mx-auto p-4">
-        {/* Main content */}
         <div className="flex-1 space-y-6">
           <Card>
             <CardHeader>
@@ -90,7 +117,6 @@ export default function SectionPage() {
           />
         </div>
 
-        {/* Right navigation panel */}
         <div className="w-80 shrink-0">
           <NavigationPanel
             courseId={courseId || ''}

@@ -5,6 +5,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Course } from "@/types/database";
 import { useAuthStore } from "@/lib/auth";
 import { LoadingScreen } from "@/components/ui/loading";
+import { Button } from "@/components/ui/button";
+import { ChevronRight } from "lucide-react";
 
 const Hub = () => {
   const user = useAuthStore((state) => state.user);
@@ -14,7 +16,7 @@ const Hub = () => {
     queryFn: async () => {
       const { data: userData, error } = await supabase
         .from('user')
-        .select('full_name, first_login')
+        .select('full_name, first_login, id')
         .eq('auth_id', user?.id)
         .single();
       
@@ -24,9 +26,11 @@ const Hub = () => {
     enabled: !!user,
   });
 
-  const { data: courses, isLoading } = useQuery({
+  const { data: coursesData, isLoading } = useQuery({
     queryKey: ['enrolled-courses'],
     queryFn: async () => {
+      if (!userData?.id) return null;
+
       const { data: userCourses, error: userCoursesError } = await supabase
         .from('user_course')
         .select(`
@@ -36,13 +40,40 @@ const Hub = () => {
             description,
             thumbnail_url,
             total_lectures
-          )
-        `);
+          ),
+          currnent_lesson_id
+        `)
+        .eq('user_id', userData.id);
       
       if (userCoursesError) throw userCoursesError;
-      return userCourses.map(uc => uc.course) as Course[];
+
+      // Fetch current lesson details for each course
+      const coursesWithCurrentLesson = await Promise.all(
+        userCourses.map(async (uc) => {
+          if (!uc.currnent_lesson_id) return { ...uc };
+
+          const { data: lesson } = await supabase
+            .from('lesson')
+            .select(`
+              *,
+              module:module_id (
+                id,
+                course_id
+              )
+            `)
+            .eq('id', uc.currnent_lesson_id)
+            .single();
+
+          return {
+            ...uc,
+            currentLesson: lesson
+          };
+        })
+      );
+
+      return coursesWithCurrentLesson;
     },
-    enabled: !!user,
+    enabled: !!userData?.id,
   });
 
   if (!user) {
@@ -53,7 +84,7 @@ const Hub = () => {
     return <Navigate to="/password" replace />;
   }
 
-  if (isLoading) {
+  if (isLoading || !coursesData) {
     return <LoadingScreen />;
   }
 
@@ -69,31 +100,61 @@ const Hub = () => {
         </div>
         
         <div className="grid md:grid-cols-2 gap-6">
-          {courses?.map((course) => (
-            <Link 
-              key={course.id}
-              to={`/course/${course.id}`}
-              className="group hover:no-underline"
-            >
-              <div className="course-card group-hover:border-primary transition-colors">
-                <div className="aspect-video mb-4 overflow-hidden rounded-lg">
-                  <img 
-                    src={course.thumbnail_url} 
-                    alt={course.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
+          {coursesData.map((courseData) => (
+            <div key={courseData.course.id} className="space-y-4">
+              <Link 
+                to={`/course/${courseData.course.id}`}
+                className="group hover:no-underline"
+              >
+                <div className="course-card group-hover:border-primary transition-colors">
+                  <div className="aspect-video mb-4 overflow-hidden rounded-lg">
+                    <img 
+                      src={courseData.course.thumbnail_url} 
+                      alt={courseData.course.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <h2 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">
+                    {courseData.course.name}
+                  </h2>
+                  <p className="text-muted-foreground">{courseData.course.description}</p>
                 </div>
-                <h2 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">
-                  {course.name}
-                </h2>
-                <p className="text-muted-foreground">{course.description}</p>
-              </div>
-            </Link>
+              </Link>
+
+              {courseData.currentLesson && (
+                <div className="bg-muted p-4 rounded-lg">
+                  <div className="flex items-center gap-4">
+                    <div className="w-24 h-16 bg-secondary rounded overflow-hidden shrink-0">
+                      {courseData.currentLesson.thumbnail_url && (
+                        <img 
+                          src={courseData.currentLesson.thumbnail_url} 
+                          alt={courseData.currentLesson.name}
+                          className="w-full h-full object-cover"
+                        />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium text-sm mb-1 truncate">
+                        {courseData.currentLesson.name}
+                      </h3>
+                      <Button asChild size="sm">
+                        <Link 
+                          to={`/course/${courseData.currentLesson.module.course_id}/module/${courseData.currentLesson.module.id}/lesson/${courseData.currentLesson.id}`}
+                        >
+                          Continuar aprendiendo
+                          <ChevronRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default Hub;
