@@ -1,59 +1,87 @@
 
-import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
-import { TopBar } from "@/components/layout/TopBar";
+import { useState } from "react";
+import { Navigate } from "react-router-dom";
+import { useAuthStore } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
-import { Course } from "@/types/database";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 const Index = () => {
-  const { data: courses, isLoading } = useQuery({
-    queryKey: ['courses'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('course')
-        .select('*');
-      
-      if (error) throw error;
-      return data as Course[];
-    },
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const user = useAuthStore((state) => state.user);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (user) {
+    return <Navigate to="/hub" replace />;
   }
 
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Error al iniciar sesión");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div>
-      <TopBar />
-      <div className="max-w-6xl mx-auto p-4">
-        <h1 className="text-4xl font-bold mb-8 text-primary">Plataforma de Aprendizaje</h1>
-        
-        <div className="grid md:grid-cols-2 gap-6">
-          {courses?.map((course) => (
-            <Link 
-              key={course.id}
-              to={`/course/${course.id}`}
-              className="group hover:no-underline"
-            >
-              <div className="course-card group-hover:border-primary transition-colors">
-                <div className="aspect-video mb-4 overflow-hidden rounded-lg">
-                  <img 
-                    src={course.thumbnail_url} 
-                    alt={course.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <h2 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">
-                  {course.name}
-                </h2>
-                <p className="text-muted-foreground">{course.description}</p>
-              </div>
-            </Link>
-          ))}
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center">
+          <img
+            src="/logo.png"
+            alt="Logo"
+            className="mx-auto h-16 w-auto"
+          />
+          <h2 className="mt-6 text-3xl font-bold text-foreground">
+            Iniciar Sesión
+          </h2>
         </div>
+
+        <form onSubmit={handleLogin} className="mt-8 space-y-6">
+          <div className="space-y-4">
+            <div>
+              <Input
+                type="email"
+                placeholder="Correo electrónico"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Input
+                type="password"
+                placeholder="Contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={loading}
+          >
+            {loading ? "Cargando..." : "Iniciar Sesión"}
+          </Button>
+        </form>
       </div>
     </div>
   );
-}
+};
 
 export default Index;
