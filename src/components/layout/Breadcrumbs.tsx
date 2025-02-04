@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Breadcrumb,
@@ -9,12 +8,62 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { courses } from "@/lib/modules";
+import { supabase } from "@/integrations/supabase/client";
+
+interface BreadcrumbData {
+  courseName?: string;
+  moduleName?: string;
+  lessonName?: string;
+}
 
 export const Breadcrumbs = () => {
   const location = useLocation();
   const pathSegments = location.pathname.split("/").filter(Boolean);
-  
+  const [names, setNames] = useState<BreadcrumbData>({});
+
+  useEffect(() => {
+    const fetchNames = async () => {
+      const data: BreadcrumbData = {};
+      
+      // Find course ID and fetch course name
+      const courseIndex = pathSegments.indexOf("course");
+      if (courseIndex !== -1 && pathSegments[courseIndex + 1]) {
+        const { data: course } = await supabase
+          .from("course")
+          .select("name")
+          .eq("id", pathSegments[courseIndex + 1])
+          .maybeSingle();
+        if (course) data.courseName = course.name;
+      }
+
+      // Find module ID and fetch module name
+      const moduleIndex = pathSegments.indexOf("module");
+      if (moduleIndex !== -1 && pathSegments[moduleIndex + 1]) {
+        const { data: module } = await supabase
+          .from("module")
+          .select("name")
+          .eq("id", pathSegments[moduleIndex + 1])
+          .maybeSingle();
+        if (module) data.moduleName = module.name;
+      }
+
+      // Find lesson ID and fetch lesson name
+      const lessonIndex = pathSegments.indexOf("lesson");
+      if (lessonIndex !== -1 && pathSegments[lessonIndex + 1]) {
+        const { data: lesson } = await supabase
+          .from("lesson")
+          .select("name")
+          .eq("id", pathSegments[lessonIndex + 1])
+          .maybeSingle();
+        if (lesson) data.lessonName = lesson.name;
+      }
+
+      setNames(data);
+    };
+
+    fetchNames();
+  }, [location.pathname]);
+
   // Build breadcrumb items based on current path
   const items = pathSegments.reduce<Array<{ href: string; label: string }>>((acc, segment, index) => {
     const path = `/${pathSegments.slice(0, index + 1).join("/")}`;
@@ -22,30 +71,20 @@ export const Breadcrumbs = () => {
     
     // Handle course names
     if (segment === "course") return acc;
-    if (pathSegments[index - 1] === "course") { // This is a course ID
-      const course = courses.find(c => c.id === segment);
-      if (course) label = course.title;
+    if (pathSegments[index - 1] === "course") {
+      if (names.courseName) label = names.courseName;
     }
     
     // Handle module names
     if (segment === "module") return acc;
     if (pathSegments[index - 1] === "module") {
-      const courseId = pathSegments[1];
-      const course = courses.find(c => c.id === courseId);
-      const moduleId = parseInt(segment);
-      const module = course?.modules.find(m => m.id === moduleId);
-      if (module) label = module.title;
+      if (names.moduleName) label = names.moduleName;
     }
     
     // Handle lesson names
     if (segment === "lesson") return acc;
     if (pathSegments[index - 1] === "lesson") {
-      const courseId = pathSegments[1];
-      const course = courses.find(c => c.id === courseId);
-      const moduleId = parseInt(pathSegments[3]);
-      const module = course?.modules.find(m => m.id === moduleId);
-      const section = module?.sections.find(s => s.id === segment);
-      if (section) label = section.title;
+      if (names.lessonName) label = names.lessonName;
     }
     
     acc.push({ href: path, label });

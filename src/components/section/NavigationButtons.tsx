@@ -1,34 +1,42 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface NavigationButtonsProps {
-  prevSection: { moduleId: string; section: { id: string; title: string } } | null;
-  nextSection: { moduleId: string; section: { id: string; title: string } } | null;
+  moduleId: string;
+  currentLesson: {
+    id: string;
+    next_lesson_id: number | null;
+    previous_lesson_id: number | null;
+  };
 }
 
-export const NavigationButtons = ({ prevSection, nextSection }: NavigationButtonsProps) => {
+export const NavigationButtons = ({ moduleId, currentLesson }: NavigationButtonsProps) => {
   return (
     <div className="flex justify-between items-center">
-      {prevSection ? (
-        <Link to={`/module/${prevSection.moduleId}/section/${prevSection.section.id}`}>
+      {currentLesson.previous_lesson_id ? (
+        <Link to={`/module/${moduleId}/lesson/${currentLesson.previous_lesson_id}`}>
           <Button variant="outline">
             <ChevronLeft className="mr-2" />
-            {prevSection.section.title}
+            Lección anterior
           </Button>
         </Link>
       ) : (
         <div /> /* Empty div for spacing */
       )}
       
-      {nextSection && (
-        <Link to={`/module/${nextSection.moduleId}/section/${nextSection.section.id}`}>
+      {currentLesson.next_lesson_id ? (
+        <Link to={`/module/${moduleId}/lesson/${currentLesson.next_lesson_id}`}>
           <Button>
-            {nextSection.section.title}
+            Siguiente lección
             <ChevronRight className="ml-2" />
           </Button>
         </Link>
+      ) : (
+        <Button>
+          Completar módulo
+          <ChevronRight className="ml-2" />
+        </Button>
       )}
     </div>
   );

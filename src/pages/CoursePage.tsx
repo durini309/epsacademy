@@ -1,4 +1,3 @@
-
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -32,9 +31,19 @@ const CoursePage = () => {
 
       if (modulesError) throw modulesError;
 
+      const { data: userProgress, error: progressError } = await supabase
+        .from('user_course')
+        .select('progress, currnent_lesson_id')
+        .eq('course_id', courseId)
+        .maybeSingle();
+
+      if (progressError) throw progressError;
+
       return {
         course: course as Course,
-        modules: modules as Module[]
+        modules: modules as Module[],
+        progress: userProgress?.progress || 0,
+        currentLessonId: userProgress?.currnent_lesson_id
       };
     },
   });
@@ -43,7 +52,7 @@ const CoursePage = () => {
     return <div>Loading...</div>;
   }
 
-  const { course, modules } = courseData;
+  const { course, modules, progress, currentLessonId } = courseData;
 
   return (
     <div>
@@ -65,20 +74,25 @@ const CoursePage = () => {
             </div>
             
             {/* Continue Learning Section */}
-            <Card className="mb-6 bg-muted">
-              <div className="flex items-center gap-4 p-4">
-                <div className="flex-1">
-                  <p className="text-sm text-muted-foreground">Continue learning</p>
-                  <Progress value={33} className="mt-2" />
+            {currentLessonId && (
+              <Card className="mb-6 bg-muted">
+                <div className="flex items-center gap-4 p-4">
+                  <div className="flex-1">
+                    <p className="text-sm text-muted-foreground">Continue learning</p>
+                    <Progress value={progress} className="mt-2" />
+                  </div>
+                  <Button asChild>
+                    <Link to={`/course/${courseId}/module/${modules[0]?.id}/lesson/${currentLessonId}`}>
+                      Continue
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
                 </div>
-                <Button asChild>
-                  <Link to={`/course/${courseId}/module/${modules[0]?.id}`}>
-                    Continue
-                    <ChevronRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              </div>
-            </Card>
+              </Card>
+            )}
+
+            {/* Modules Title */}
+            <h2 className="text-2xl font-bold mb-4">Módulos del curso</h2>
 
             {/* Modules List */}
             <div className="space-y-4">

@@ -40,7 +40,9 @@ export type Database = {
           length_sec: number
           module_id: number
           name: string
+          next_lesson_id: number | null
           order: number
+          previous_lesson_id: number | null
           thumbnail_url: string
           video_url: string
         }
@@ -50,7 +52,9 @@ export type Database = {
           length_sec: number
           module_id: number
           name: string
+          next_lesson_id?: number | null
           order: number
+          previous_lesson_id?: number | null
           thumbnail_url: string
           video_url: string
         }
@@ -60,7 +64,9 @@ export type Database = {
           length_sec?: number
           module_id?: number
           name?: string
+          next_lesson_id?: number | null
           order?: number
+          previous_lesson_id?: number | null
           thumbnail_url?: string
           video_url?: string
         }
@@ -70,6 +76,20 @@ export type Database = {
             columns: ["module_id"]
             isOneToOne: false
             referencedRelation: "module"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lesson_next_lesson_id_fkey"
+            columns: ["next_lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lesson"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lesson_previous_lesson_id_fkey"
+            columns: ["previous_lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lesson"
             referencedColumns: ["id"]
           },
         ]
@@ -102,6 +122,7 @@ export type Database = {
       }
       user: {
         Row: {
+          auth_id: string | null
           created_at: string
           email: string
           full_name: string | null
@@ -109,6 +130,7 @@ export type Database = {
           password: string
         }
         Insert: {
+          auth_id?: string | null
           created_at?: string
           email: string
           full_name?: string | null
@@ -116,6 +138,7 @@ export type Database = {
           password: string
         }
         Update: {
+          auth_id?: string | null
           created_at?: string
           email?: string
           full_name?: string | null
