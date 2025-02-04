@@ -8,6 +8,7 @@ import { ChevronRight } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { Course, Module } from "@/types/database";
+import { LoadingScreen } from "@/components/ui/loading";
 
 const CoursePage = () => {
   const { courseId } = useParams();
@@ -49,7 +50,7 @@ const CoursePage = () => {
   });
 
   if (isLoading || !courseData) {
-    return <div>Loading...</div>;
+    return <LoadingScreen />;
   }
 
   const { course, modules, progress, currentLessonId } = courseData;

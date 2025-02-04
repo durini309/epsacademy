@@ -9,6 +9,7 @@ import { TopBar } from "@/components/layout/TopBar";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { supabase } from "@/integrations/supabase/client";
 import { Module, Lesson } from "@/types/database";
+import { LoadingScreen } from "@/components/ui/loading";
 
 export default function SectionPage() {
   const { courseId, moduleId, sectionId } = useParams();
@@ -46,9 +47,9 @@ export default function SectionPage() {
   });
 
   if (isLoading || !sectionData) {
-    return <div>Loading...</div>;
+    return <LoadingScreen />;
   }
-  
+
   const { module, lessons, currentLesson } = sectionData;
   
   // Calculate current section number and total sections
