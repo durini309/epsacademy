@@ -19,7 +19,7 @@ const SectionPage = () => {
       const { data: module, error: moduleError } = await supabase
         .from('module')
         .select('*')
-        .eq('id', moduleId)
+        .eq('id', parseInt(moduleId || '0'))
         .single();
 
       if (moduleError) throw moduleError;
@@ -27,7 +27,7 @@ const SectionPage = () => {
       const { data: sections, error: sectionsError } = await supabase
         .from('lesson')
         .select('*')
-        .eq('module_id', moduleId)
+        .eq('module_id', parseInt(moduleId || '0'))
         .order('order');
 
       if (sectionsError) throw sectionsError;
@@ -35,7 +35,7 @@ const SectionPage = () => {
       const { data: currentSection, error: sectionError } = await supabase
         .from('lesson')
         .select('*')
-        .eq('id', sectionId)
+        .eq('id', parseInt(sectionId || '0'))
         .single();
 
       if (sectionError) throw sectionError;
@@ -57,7 +57,8 @@ const SectionPage = () => {
         const { error } = await supabase
           .from('user_course')
           .update({ currnent_lesson_id: parseInt(sectionId) })
-          .eq('course_id', parseInt(courseId));
+          .eq('course_id', parseInt(courseId))
+          .single();
 
         if (error) {
           console.error('Error updating current lesson:', error);

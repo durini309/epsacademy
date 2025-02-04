@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { FileText, Video } from "lucide-react";
 
 interface Section {
-  id: string;
+  id: number;
   title: string;
   type: "video" | "pdf";
   thumbnailUrl?: string;
@@ -15,7 +16,7 @@ interface NavigationPanelProps {
   moduleTitle: string;
   currentSection: number;
   totalSections: number;
-  sections: Section[];
+  sections: any[]; // We'll map the data to match Section type
   moduleId: string;
   currentSectionId: string;
 }
@@ -29,6 +30,15 @@ export const NavigationPanel = ({
   moduleId,
   currentSectionId,
 }: NavigationPanelProps) => {
+  // Map the lesson data to match our Section interface
+  const mappedSections: Section[] = sections.map((lesson) => ({
+    id: lesson.id,
+    title: lesson.name,
+    type: lesson.video_url ? "video" : "pdf",
+    thumbnailUrl: lesson.thumbnail_url,
+    order: lesson.order,
+  }));
+
   return (
     <Card className="sticky top-4">
       <CardHeader>
@@ -38,12 +48,12 @@ export const NavigationPanel = ({
       <CardContent>
         <ScrollArea className="h-[400px] pr-4">
           <div className="space-y-2">
-            {sections.map((section) => (
+            {mappedSections.map((section) => (
               <Link
                 key={section.id}
                 to={`/course/${courseId}/module/${moduleId}/lesson/${section.id}`}
                 className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
-                  section.id === currentSectionId
+                  section.id === parseInt(currentSectionId)
                     ? "bg-secondary"
                     : "hover:bg-secondary/50"
                 }`}
@@ -60,7 +70,11 @@ export const NavigationPanel = ({
                     />
                   ) : (
                     <div className="w-full h-full bg-secondary flex items-center justify-center">
-                      <span className="text-secondary-foreground text-sm">No thumbnail</span>
+                      {section.type === "video" ? (
+                        <Video className="h-6 w-6 text-secondary-foreground opacity-50" />
+                      ) : (
+                        <FileText className="h-6 w-6 text-secondary-foreground opacity-50" />
+                      )}
                     </div>
                   )}
                 </div>
