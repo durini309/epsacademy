@@ -18,7 +18,7 @@ const CoursePage = () => {
       const { data: course, error: courseError } = await supabase
         .from('course')
         .select('*')
-        .eq('id', courseId)
+        .eq('id', parseInt(courseId || '0'))
         .single();
 
       if (courseError) throw courseError;
@@ -26,7 +26,7 @@ const CoursePage = () => {
       const { data: modules, error: modulesError } = await supabase
         .from('module')
         .select('*')
-        .eq('course_id', courseId)
+        .eq('course_id', parseInt(courseId || '0'))
         .order('id');
 
       if (modulesError) throw modulesError;
@@ -34,7 +34,7 @@ const CoursePage = () => {
       const { data: userProgress, error: progressError } = await supabase
         .from('user_course')
         .select('progress, currnent_lesson_id')
-        .eq('course_id', courseId)
+        .eq('course_id', parseInt(courseId || '0'))
         .maybeSingle();
 
       if (progressError) throw progressError;
@@ -74,7 +74,7 @@ const CoursePage = () => {
             </div>
             
             {/* Continue Learning Section */}
-            {currentLessonId && (
+            {progress > 0 && currentLessonId && (
               <Card className="mb-6 bg-muted">
                 <div className="flex items-center gap-4 p-4">
                   <div className="flex-1">

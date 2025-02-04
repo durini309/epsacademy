@@ -11,7 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Module, Lesson } from "@/types/database";
 
 export default function SectionPage() {
-  const { moduleId, sectionId } = useParams();
+  const { courseId, moduleId, sectionId } = useParams();
   
   const { data: sectionData, isLoading } = useQuery({
     queryKey: ['lesson', moduleId, sectionId],
@@ -83,6 +83,7 @@ export default function SectionPage() {
           </Card>
           
           <NavigationButtons
+            courseId={courseId || ''}
             moduleId={moduleId || ''}
             currentLesson={currentLesson}
           />
@@ -91,6 +92,7 @@ export default function SectionPage() {
         {/* Right navigation panel */}
         <div className="w-80 shrink-0">
           <NavigationPanel
+            courseId={courseId || ''}
             moduleTitle={module.name}
             currentSection={currentSectionIndex}
             totalSections={totalSections}

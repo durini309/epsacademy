@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface NavigationButtonsProps {
+  courseId: string;
   moduleId: string;
   currentLesson: {
     id: number;
@@ -11,13 +12,13 @@ interface NavigationButtonsProps {
   } | null;
 }
 
-export const NavigationButtons = ({ moduleId, currentLesson }: NavigationButtonsProps) => {
+export const NavigationButtons = ({ courseId, moduleId, currentLesson }: NavigationButtonsProps) => {
   if (!currentLesson) return null;
 
   return (
     <div className="flex justify-between items-center">
       {currentLesson.previous_lesson_id ? (
-        <Link to={`/module/${moduleId}/lesson/${currentLesson.previous_lesson_id}`}>
+        <Link to={`/course/${courseId}/module/${moduleId}/lesson/${currentLesson.previous_lesson_id}`}>
           <Button variant="outline">
             <ChevronLeft className="mr-2" />
             Lección anterior
@@ -28,7 +29,7 @@ export const NavigationButtons = ({ moduleId, currentLesson }: NavigationButtons
       )}
       
       {currentLesson.next_lesson_id ? (
-        <Link to={`/module/${moduleId}/lesson/${currentLesson.next_lesson_id}`}>
+        <Link to={`/course/${courseId}/module/${moduleId}/lesson/${currentLesson.next_lesson_id}`}>
           <Button>
             Siguiente lección
             <ChevronRight className="ml-2" />

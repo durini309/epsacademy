@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Play } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -10,6 +9,7 @@ interface Section {
 }
 
 interface NavigationPanelProps {
+  courseId: string;
   moduleTitle: string;
   currentSection: number;
   totalSections: number;
@@ -19,6 +19,7 @@ interface NavigationPanelProps {
 }
 
 export const NavigationPanel = ({
+  courseId,
   moduleTitle,
   currentSection,
   totalSections,
@@ -36,7 +37,7 @@ export const NavigationPanel = ({
         {sections.map((section) => (
           <Link
             key={section.id}
-            to={`/module/${moduleId}/section/${section.id}`}
+            to={`/course/${courseId}/module/${moduleId}/lesson/${section.id}`}
             className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
               section.id === currentSectionId
                 ? "bg-secondary"
