@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, Navigate } from "react-router-dom";
 import { TopBar } from "@/components/layout/TopBar";
 import { supabase } from "@/integrations/supabase/client";
-import { Course } from "@/types/database";
 import { useAuthStore } from "@/lib/auth";
 import { LoadingScreen } from "@/components/ui/loading";
 import { Button } from "@/components/ui/button";
@@ -64,10 +63,10 @@ const Hub = () => {
             .eq('id', uc.currnent_lesson_id)
             .single();
 
-          return {
+          return lesson ? {
             ...uc,
             currentLesson: lesson
-          };
+          } : uc;
         })
       );
 
@@ -121,7 +120,7 @@ const Hub = () => {
                 </div>
               </Link>
 
-              {courseData.currentLesson && (
+              {'currentLesson' in courseData && courseData.currentLesson && (
                 <div className="bg-muted p-4 rounded-lg">
                   <div className="flex items-center gap-4">
                     <div className="w-24 h-16 bg-secondary rounded overflow-hidden shrink-0">
