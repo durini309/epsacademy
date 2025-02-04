@@ -193,7 +193,8 @@ export default function SectionPage() {
               </Button>
             </Link>
           ) : (
-            <div /> {/* Empty div for spacing */}
+            // Empty div for spacing
+            <div />
           )}
           
           {nextSection && (
