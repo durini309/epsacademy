@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { NavigationPanel } from "@/components/section/NavigationPanel";
 import { VideoPlayer } from "@/components/section/VideoPlayer";
+import { ResourcesList } from "@/components/section/ResourcesList";
 import { NavigationButtons } from "@/components/section/NavigationButtons";
 import { TopBar } from "@/components/layout/TopBar";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
@@ -40,12 +41,20 @@ const SectionPage = () => {
 
       if (sectionError) throw sectionError;
 
+      const { data: extras, error: extrasError } = await supabase
+        .from('lesson_extras')
+        .select('*')
+        .eq('lesson_id', parseInt(sectionId || '0'));
+
+      if (extrasError) throw extrasError;
+
       return {
         module,
         sections,
         currentSection,
         currentSectionIndex: sections.findIndex(s => s.id === parseInt(sectionId || '0')) + 1,
-        totalSections: sections.length
+        totalSections: sections.length,
+        extras: extras || []
       };
     }
   });
@@ -76,7 +85,7 @@ const SectionPage = () => {
     return <LoadingScreen />;
   }
 
-  const { module, sections, currentSection, currentSectionIndex, totalSections } = data;
+  const { module, sections, currentSection, currentSectionIndex, totalSections, extras } = data;
 
   return (
     <div>
@@ -86,6 +95,7 @@ const SectionPage = () => {
         <div className="lg:col-span-2 space-y-6">
           <h1 className="text-3xl font-bold">{currentSection.name}</h1>
           <VideoPlayer url={currentSection.video_url} />
+          <ResourcesList resources={extras} />
           <NavigationButtons
             courseId={courseId || ''}
             moduleId={moduleId || ''}
