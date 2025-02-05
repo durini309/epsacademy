@@ -21,7 +21,7 @@ const SectionPage = () => {
         .from('module')
         .select('*')
         .eq('id', parseInt(moduleId || '0'))
-        .single();
+        .maybeSingle();
 
       if (moduleError) throw moduleError;
 
@@ -37,7 +37,7 @@ const SectionPage = () => {
         .from('lesson')
         .select('*')
         .eq('id', parseInt(sectionId || '0'))
-        .single();
+        .maybeSingle();
 
       if (sectionError) throw sectionError;
 
