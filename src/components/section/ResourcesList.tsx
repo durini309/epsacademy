@@ -1,4 +1,4 @@
-import { FilePresentation, FileText, Globe, Text } from "lucide-react";
+import { Presentation, FileText, Globe, Text } from "lucide-react";
 
 interface Resource {
   id: number;
@@ -17,7 +17,7 @@ export const ResourcesList = ({ resources }: ResourcesListProps) => {
   const getIcon = (type: string) => {
     switch (type.toUpperCase()) {
       case 'SLIDES':
-        return <FilePresentation className="h-4 w-4" />;
+        return <Presentation className="h-4 w-4" />;
       case 'DOC':
         return <FileText className="h-4 w-4" />;
       case 'WEBSITE':
