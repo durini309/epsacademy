@@ -100,21 +100,21 @@ export type Database = {
           label: string
           lesson_id: number
           type: string
-          url: string
+          url: string | null
         }
         Insert: {
           id?: number
           label: string
           lesson_id: number
           type: string
-          url: string
+          url?: string | null
         }
         Update: {
           id?: number
           label?: string
           lesson_id?: number
           type?: string
-          url?: string
+          url?: string | null
         }
         Relationships: [
           {

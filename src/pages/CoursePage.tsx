@@ -26,7 +26,7 @@ const CoursePage = () => {
         .from('module')
         .select(`
           *,
-          lessons:lesson(count)
+          lesson (count)
         `)
         .eq('course_id', parseInt(courseId || '0'))
         .order('id');
@@ -62,7 +62,7 @@ const CoursePage = () => {
         course,
         modules: modules.map(module => ({
           ...module,
-          total_lessons: module.lessons.count
+          lessonCount: module.lesson[0].count
         })),
         currentLesson
       };
@@ -78,7 +78,7 @@ const CoursePage = () => {
   return (
     <div>
       <TopBar />
-      <div className="pt-4">
+      <div className="pt-8">
         <Breadcrumbs />
       </div>
       <div className="max-w-4xl mx-auto p-4 space-y-6">
@@ -89,7 +89,7 @@ const CoursePage = () => {
               <h1 className="text-3xl font-bold mb-2">{course.name}</h1>
               <p className="text-muted-foreground text-lg">{course.description}</p>
             </div>
-            <div className="w-64 h-40 shrink-0">
+            <div className="w-48 h-32 shrink-0">
               <img 
                 src={course.thumbnail_url} 
                 alt={course.name} 
@@ -101,7 +101,7 @@ const CoursePage = () => {
         
         {/* Continue Learning Section */}
         {currentLesson && (
-          <div className="bg-secondary/10 rounded-lg">
+          <div className="bg-secondary/5 rounded-lg">
             <div className="flex items-center gap-4 p-4">
               <div className="w-24 h-16 bg-secondary rounded overflow-hidden shrink-0">
                 <img 
@@ -136,7 +136,7 @@ const CoursePage = () => {
                   <div>
                     <h3 className="text-xl font-semibold">{module.name}</h3>
                     <p className="text-sm text-muted-foreground">
-                      {module.total_lessons} lecciones
+                      {module.lessonCount} {module.lessonCount === 1 ? 'lección' : 'lecciones'}
                     </p>
                   </div>
                   <Button variant="outline" asChild>

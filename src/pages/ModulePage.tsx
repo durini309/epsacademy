@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { LoadingScreen } from "@/components/ui/loading";
 import { TopBar } from "@/components/layout/TopBar";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Clock, Play } from "lucide-react";
 
 const ModulePage = () => {
   const { courseId, moduleId } = useParams();
@@ -63,7 +64,7 @@ const ModulePage = () => {
   return (
     <div className="min-h-screen bg-background">
       <TopBar />
-      <div className="pt-4">
+      <div className="pt-8">
         <Breadcrumbs />
       </div>
       
@@ -92,35 +93,27 @@ const ModulePage = () => {
               <CardContent>
                 <div className="space-y-4">
                   {lessons.map((lesson) => (
-                    <a
+                    <Link
                       key={lesson.id}
-                      href={`/course/${courseId}/module/${moduleId}/lesson/${lesson.id}`}
-                      className="block p-4 rounded-lg hover:bg-secondary/50 transition-colors"
+                      to={`/course/${courseId}/module/${moduleId}/lesson/${lesson.id}`}
+                      className="block p-4 rounded-lg hover:bg-secondary/50 transition-colors group"
                     >
-                      <div className="flex items-start gap-4">
-                        <div className="w-48 h-28 bg-muted rounded-lg overflow-hidden shrink-0">
-                          {lesson.thumbnail_url ? (
-                            <img 
-                              src={lesson.thumbnail_url} 
-                              alt={lesson.name}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-secondary">
-                              <span className="text-secondary-foreground">No thumbnail</span>
-                            </div>
-                          )}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-lg font-medium group-hover:underline">
+                            {lesson.name}
+                            <span className="text-muted-foreground ml-2 inline-flex items-center">
+                              <Clock className="w-4 h-4 mr-1" />
+                              {formatTime(lesson.length_sec)}
+                            </span>
+                          </h3>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-lg font-semibold mb-2">{lesson.name}</h3>
-                          <p className="text-muted-foreground text-sm line-clamp-2">{lesson.description}</p>
-                        </div>
-                        <div className="flex items-center gap-1 text-muted-foreground shrink-0">
-                          <Clock className="w-4 h-4" />
-                          <span className="text-sm">{formatTime(lesson.length_sec)}</span>
-                        </div>
+                        <Button variant="outline" className="group-hover:bg-primary group-hover:text-primary-foreground">
+                          Ver lección
+                          <Play className="ml-2 w-4 h-4" />
+                        </Button>
                       </div>
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </CardContent>
