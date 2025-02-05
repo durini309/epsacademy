@@ -86,7 +86,7 @@ export const Breadcrumbs = () => {
   }, [{ href: "/", label: "Home" }]);
 
   return (
-    <Breadcrumb className="max-w-4xl mx-auto px-4 py-2">
+    <Breadcrumb className="max-w-4xl mx-auto px-4 py-6">
       <BreadcrumbList>
         {items.map((item, index) => (
           <React.Fragment key={item.href}>

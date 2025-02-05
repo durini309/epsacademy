@@ -94,6 +94,38 @@ export type Database = {
           },
         ]
       }
+      lesson_extras: {
+        Row: {
+          id: number
+          label: string
+          lesson_id: number
+          type: string
+          url: string
+        }
+        Insert: {
+          id?: number
+          label: string
+          lesson_id: number
+          type: string
+          url: string
+        }
+        Update: {
+          id?: number
+          label?: string
+          lesson_id?: number
+          type?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_extras_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lesson"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       module: {
         Row: {
           course_id: number

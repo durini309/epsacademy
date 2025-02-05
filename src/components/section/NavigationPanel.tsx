@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { FileText, Video } from "lucide-react";
+import { FileText, Video, Clock } from "lucide-react";
 
 interface Section {
   id: number;
@@ -9,6 +9,7 @@ interface Section {
   type: "video" | "pdf";
   thumbnailUrl?: string;
   order: number;
+  lengthSec?: number;
 }
 
 interface NavigationPanelProps {
@@ -37,7 +38,13 @@ export const NavigationPanel = ({
     type: lesson.video_url ? "video" : "pdf",
     thumbnailUrl: lesson.thumbnail_url,
     order: lesson.order,
+    lengthSec: lesson.length_sec,
   }));
+
+  const formatDuration = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    return `${minutes} min`;
+  };
 
   return (
     <Card className="sticky top-4">
@@ -82,9 +89,12 @@ export const NavigationPanel = ({
                   <p className="text-sm font-medium truncate">
                     {section.title}
                   </p>
-                  <p className="text-xs text-muted-foreground">
-                    {section.type === "video" ? "Video" : "PDF"}
-                  </p>
+                  {section.lengthSec && (
+                    <p className="text-xs text-muted-foreground flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      {formatDuration(section.lengthSec)}
+                    </p>
+                  )}
                 </div>
               </Link>
             ))}
