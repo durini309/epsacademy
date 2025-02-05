@@ -11,16 +11,17 @@ import { LoadingScreen } from "@/components/ui/loading";
 const ModulePage = () => {
   const { courseId, moduleId } = useParams();
 
-  const { data: moduleData, isLoading } = useQuery({
+  const { data: moduleData, isLoading, error } = useQuery({
     queryKey: ['module', moduleId],
     queryFn: async () => {
       const { data: module, error: moduleError } = await supabase
         .from('module')
         .select('*')
         .eq('id', parseInt(moduleId || '0'))
-        .single();
+        .maybeSingle();
 
       if (moduleError) throw moduleError;
+      if (!module) throw new Error('Module not found');
 
       const { data: lessons, error: lessonsError } = await supabase
         .from('lesson')
@@ -32,13 +33,33 @@ const ModulePage = () => {
 
       return {
         module,
-        lessons
+        lessons: lessons || []
       };
     },
   });
 
-  if (isLoading || !moduleData) {
+  if (isLoading) {
     return <LoadingScreen />;
+  }
+
+  if (error || !moduleData?.module) {
+    return (
+      <div>
+        <TopBar />
+        <div className="pt-8">
+          <Breadcrumbs />
+        </div>
+        <div className="max-w-4xl mx-auto p-4">
+          <Card>
+            <CardContent className="p-6">
+              <p className="text-center text-muted-foreground">
+                No se pudo cargar el módulo. Por favor, intente nuevamente.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
   }
 
   const { module, lessons } = moduleData;
@@ -68,7 +89,7 @@ const ModulePage = () => {
               <Link
                 key={lesson.id}
                 to={`/course/${courseId}/module/${moduleId}/lesson/${lesson.id}`}
-                className="block hover:bg-secondary/5 rounded-lg transition-colors"
+                className="block hover:bg-secondary/5 rounded-lg transition-colors group"
               >
                 <div className="flex items-center gap-4 p-4">
                   <div className="w-24 h-16 bg-secondary rounded overflow-hidden shrink-0">
@@ -78,17 +99,22 @@ const ModulePage = () => {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="flex-1">
-                    <div className="group">
-                      <span className="group-hover:underline">
-                        {lesson.name} - <Clock className="inline-block h-4 w-4 mb-0.5" /> {formatDuration(lesson.length_sec)}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="group-hover:underline font-medium truncate">
+                        {lesson.name}
+                      </span>
+                      <span className="text-muted-foreground group-hover:underline whitespace-nowrap">
+                        - <Clock className="inline-block h-4 w-4 mb-0.5" /> {formatDuration(lesson.length_sec)}
                       </span>
                     </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2">{lesson.description}</p>
+                    <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                      {lesson.description}
+                    </p>
                   </div>
                   <Button variant="outline" className="shrink-0 group-hover:bg-primary group-hover:text-primary-foreground">
                     Ver lección
-                    <ChevronRight className="ml-2 h-4 w-4" />
+                    <ChevronRight className="h-4 w-4" />
                   </Button>
                 </div>
               </Link>
