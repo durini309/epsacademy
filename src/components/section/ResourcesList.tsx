@@ -1,3 +1,4 @@
+
 import { Presentation, FileText, Globe, Text } from "lucide-react";
 
 interface Resource {
@@ -12,8 +13,6 @@ interface ResourcesListProps {
 }
 
 export const ResourcesList = ({ resources }: ResourcesListProps) => {
-  if (!resources || resources.length === 0) return null;
-
   const getIcon = (type: string) => {
     switch (type.toUpperCase()) {
       case 'SLIDES':
@@ -38,37 +37,41 @@ export const ResourcesList = ({ resources }: ResourcesListProps) => {
 
   return (
     <div className="mt-6">
-      <h3 className="text-lg font-semibold mb-3">Recursos Adicionales</h3>
-      <div className="space-y-2">
-        {sortedResources.map((resource) => {
-          const isClickable = resource.type.toUpperCase() !== 'TEXT' && resource.url;
-          
-          const content = (
-            <div className="flex items-center gap-2 text-primary">
-              {getIcon(resource.type)}
-              <span className={isClickable ? "hover:underline cursor-pointer" : ""}>
-                {resource.label}
-              </span>
-            </div>
-          );
+      <h3 className="text-lg font-semibold mb-3">Recursos</h3>
+      {(!resources || resources.length === 0) ? (
+        <p className="text-muted-foreground">No hay recursos para esta lección</p>
+      ) : (
+        <div className="space-y-2">
+          {sortedResources.map((resource) => {
+            const isClickable = resource.type.toUpperCase() !== 'TEXT' && resource.url;
+            
+            const content = (
+              <div className="flex items-center gap-2 text-primary">
+                {getIcon(resource.type)}
+                <span className={isClickable ? "hover:underline cursor-pointer" : ""}>
+                  {resource.label}
+                </span>
+              </div>
+            );
 
-          return (
-            <div key={resource.id}>
-              {isClickable && resource.url ? (
-                <a 
-                  href={resource.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                >
-                  {content}
-                </a>
-              ) : (
-                content
-              )}
-            </div>
-          );
-        })}
-      </div>
+            return (
+              <div key={resource.id}>
+                {isClickable && resource.url ? (
+                  <a 
+                    href={resource.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
+                    {content}
+                  </a>
+                ) : (
+                  content
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
