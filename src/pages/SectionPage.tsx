@@ -95,12 +95,12 @@ const SectionPage = () => {
         <div className="lg:col-span-2 space-y-6">
           <h1 className="text-3xl font-bold">{currentSection.name}</h1>
           <VideoPlayer url={currentSection.video_url} />
-          <ResourcesList resources={extras} />
           <NavigationButtons
             courseId={courseId || ''}
             moduleId={moduleId || ''}
             currentLesson={currentSection}
           />
+          <ResourcesList resources={extras} />
         </div>
         <div>
           <NavigationPanel
