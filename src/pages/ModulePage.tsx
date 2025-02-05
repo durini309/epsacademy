@@ -1,125 +1,100 @@
-import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
-import { LoadingScreen } from "@/components/ui/loading";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { TopBar } from "@/components/layout/TopBar";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Clock, Play } from "lucide-react";
+import { ChevronRight, Clock } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { LoadingScreen } from "@/components/ui/loading";
 
 const ModulePage = () => {
   const { courseId, moduleId } = useParams();
 
-  const { data: moduleData, isLoading: isModuleLoading } = useQuery({
+  const { data: moduleData, isLoading } = useQuery({
     queryKey: ['module', moduleId],
     queryFn: async () => {
-      const { data: module, error } = await supabase
+      const { data: module, error: moduleError } = await supabase
         .from('module')
-        .select(`
-          *,
-          course:course_id (
-            name,
-            thumbnail_url
-          )
-        `)
-        .eq('id', parseInt(moduleId!))
+        .select('*')
+        .eq('id', parseInt(moduleId || '0'))
         .single();
-      
-      if (error) throw error;
-      return module;
-    },
-    enabled: !!moduleId,
-  });
 
-  const { data: lessons, isLoading: isLessonsLoading } = useQuery({
-    queryKey: ['module-lessons', moduleId],
-    queryFn: async () => {
-      const { data: lessons, error } = await supabase
+      if (moduleError) throw moduleError;
+
+      const { data: lessons, error: lessonsError } = await supabase
         .from('lesson')
         .select('*')
-        .eq('module_id', parseInt(moduleId!))
-        .order('order', { ascending: true });
-      
-      if (error) throw error;
-      return lessons;
+        .eq('module_id', parseInt(moduleId || '0'))
+        .order('order');
+
+      if (lessonsError) throw lessonsError;
+
+      return {
+        module,
+        lessons
+      };
     },
-    enabled: !!moduleId,
   });
 
-  if (isModuleLoading || isLessonsLoading) {
+  if (isLoading || !moduleData) {
     return <LoadingScreen />;
   }
 
-  if (!moduleData || !lessons) {
-    return null;
-  }
+  const { module, lessons } = moduleData;
 
-  const formatTime = (seconds: number) => {
+  const formatDuration = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div>
       <TopBar />
       <div className="pt-8">
         <Breadcrumbs />
       </div>
-      
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex items-start gap-8">
-          {/* Main Content */}
-          <div className="flex-1">
-            <div className="flex items-center gap-8 mb-8">
-              <div>
-                <h1 className="text-4xl font-bold mb-2">{moduleData.name}</h1>
-              </div>
-              {moduleData.course.thumbnail_url && (
-                <img 
-                  src={moduleData.course.thumbnail_url} 
-                  alt={moduleData.course.name}
-                  className="w-32 h-32 rounded-lg object-cover"
-                />
-              )}
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Lecciones del módulo</CardTitle>
-                <CardDescription>{lessons.length} lecciones</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {lessons.map((lesson) => (
-                    <Link
-                      key={lesson.id}
-                      to={`/course/${courseId}/module/${moduleId}/lesson/${lesson.id}`}
-                      className="block p-4 rounded-lg hover:bg-secondary/50 transition-colors group"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-lg font-medium group-hover:underline">
-                            {lesson.name}
-                            <span className="text-muted-foreground ml-2 inline-flex items-center">
-                              <Clock className="w-4 h-4 mr-1" />
-                              {formatTime(lesson.length_sec)}
-                            </span>
-                          </h3>
-                        </div>
-                        <Button variant="outline" className="group-hover:bg-primary group-hover:text-primary-foreground">
-                          Ver lección
-                          <Play className="ml-2 w-4 h-4" />
-                        </Button>
-                      </div>
-                    </Link>
-                  ))}
+      <div className="max-w-4xl mx-auto p-4 space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl">{module.name}</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              {lessons.length} {lessons.length === 1 ? 'lección' : 'lecciones'}
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {lessons.map((lesson) => (
+              <Link
+                key={lesson.id}
+                to={`/course/${courseId}/module/${moduleId}/lesson/${lesson.id}`}
+                className="block hover:bg-secondary/5 rounded-lg transition-colors"
+              >
+                <div className="flex items-center gap-4 p-4">
+                  <div className="w-24 h-16 bg-secondary rounded overflow-hidden shrink-0">
+                    <img 
+                      src={lesson.thumbnail_url} 
+                      alt={lesson.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <div className="group">
+                      <span className="group-hover:underline">
+                        {lesson.name} - <Clock className="inline-block h-4 w-4 mb-0.5" /> {formatDuration(lesson.length_sec)}
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground line-clamp-2">{lesson.description}</p>
+                  </div>
+                  <Button variant="outline" className="shrink-0 group-hover:bg-primary group-hover:text-primary-foreground">
+                    Ver lección
+                    <ChevronRight className="ml-2 h-4 w-4" />
+                  </Button>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+              </Link>
+            ))}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
