@@ -1,12 +1,11 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TopBar } from "@/components/layout/TopBar";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { ChevronRight, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Course, Module } from "@/types/database";
 import { LoadingScreen } from "@/components/ui/loading";
 
 const CoursePage = () => {
@@ -25,7 +24,10 @@ const CoursePage = () => {
 
       const { data: modules, error: modulesError } = await supabase
         .from('module')
-        .select('*')
+        .select(`
+          *,
+          lessons:lesson(count)
+        `)
         .eq('course_id', parseInt(courseId || '0'))
         .order('id');
 
@@ -57,8 +59,11 @@ const CoursePage = () => {
       }
 
       return {
-        course: course as Course,
-        modules: modules as Module[],
+        course,
+        modules: modules.map(module => ({
+          ...module,
+          total_lessons: module.lessons.count
+        })),
         currentLesson
       };
     },
@@ -73,7 +78,9 @@ const CoursePage = () => {
   return (
     <div>
       <TopBar />
-      <Breadcrumbs />
+      <div className="pt-4">
+        <Breadcrumbs />
+      </div>
       <div className="max-w-4xl mx-auto p-4 space-y-6">
         {/* Course Overview Card */}
         <Card>
@@ -129,7 +136,7 @@ const CoursePage = () => {
                   <div>
                     <h3 className="text-xl font-semibold">{module.name}</h3>
                     <p className="text-sm text-muted-foreground">
-                      {module.total_lessons || 0} lecciones
+                      {module.total_lessons} lecciones
                     </p>
                   </div>
                   <Button variant="outline" asChild>
