@@ -15,21 +15,18 @@ export type Database = {
           id: number
           name: string
           thumbnail_url: string
-          total_lectures: number
         }
         Insert: {
           description: string
           id?: number
           name: string
           thumbnail_url: string
-          total_lectures: number
         }
         Update: {
           description?: string
           id?: number
           name?: string
           thumbnail_url?: string
-          total_lectures?: number
         }
         Relationships: []
       }
