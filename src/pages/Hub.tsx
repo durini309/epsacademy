@@ -9,7 +9,23 @@ import { useAuthStore } from "@/lib/auth";
 
 const Hub = () => {
   const { user } = useAuthStore();
-  const { data: courses, isLoading } = useQuery({
+
+  const { data: userData, isLoading: isLoadingUser } = useQuery({
+    queryKey: ['user-profile'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('user')
+        .select('full_name')
+        .eq('auth_id', user?.id)
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user?.id,
+  });
+
+  const { data: courses, isLoading: isLoadingCourses } = useQuery({
     queryKey: ['courses'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -21,7 +37,7 @@ const Hub = () => {
     },
   });
 
-  if (isLoading) {
+  if (isLoadingUser || isLoadingCourses) {
     return <LoadingScreen />;
   }
 
@@ -31,7 +47,7 @@ const Hub = () => {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold">
-            Hola, {user?.user_metadata?.full_name || 'estudiante'}
+            Hola, {userData?.full_name || 'estudiante'}
           </h1>
           <p className="text-lg text-muted-foreground mt-2">
             Estos son los cursos que tienes disponible

@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -55,49 +56,52 @@ export const NavigationPanel = ({
       <CardContent>
         <ScrollArea className="h-[400px] pr-4">
           <div className="space-y-2">
-            {mappedSections.map((section) => (
-              <Link
-                key={section.id}
-                to={`/course/${courseId}/module/${moduleId}/lesson/${section.id}`}
-                className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
-                  section.id === parseInt(currentSectionId)
-                    ? "bg-secondary"
-                    : "hover:bg-secondary/50"
-                }`}
-              >
-                <span className="text-lg font-semibold text-muted-foreground w-6 shrink-0 text-center">
-                  {section.order}
-                </span>
-                <div className="w-24 h-16 bg-muted rounded flex items-center justify-center shrink-0 overflow-hidden">
-                  {section.thumbnailUrl ? (
-                    <img 
-                      src={section.thumbnailUrl} 
-                      alt={section.title}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-secondary flex items-center justify-center">
-                      {section.type === "video" ? (
-                        <Video className="h-6 w-6 text-secondary-foreground opacity-50" />
-                      ) : (
-                        <FileText className="h-6 w-6 text-secondary-foreground opacity-50" />
-                      )}
-                    </div>
-                  )}
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-medium truncate">
-                    {section.title}
-                  </p>
-                  {section.lengthSec && (
-                    <p className="text-xs text-muted-foreground flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      {formatDuration(section.lengthSec)}
+            {mappedSections.map((section) => {
+              const isCurrentSection = section.id === parseInt(currentSectionId);
+              return (
+                <Link
+                  key={section.id}
+                  to={`/course/${courseId}/module/${moduleId}/lesson/${section.id}`}
+                  className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
+                    isCurrentSection
+                      ? "bg-secondary"
+                      : "hover:bg-secondary/50"
+                  } ${isCurrentSection ? "ring-1 ring-primary" : ""}`}
+                >
+                  <span className="text-lg font-semibold text-muted-foreground w-6 shrink-0 text-center">
+                    {section.order}
+                  </span>
+                  <div className="w-24 h-16 bg-muted rounded flex items-center justify-center shrink-0 overflow-hidden">
+                    {section.thumbnailUrl ? (
+                      <img 
+                        src={section.thumbnailUrl} 
+                        alt={section.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-secondary flex items-center justify-center">
+                        {section.type === "video" ? (
+                          <Video className="h-6 w-6 text-secondary-foreground opacity-50" />
+                        ) : (
+                          <FileText className="h-6 w-6 text-secondary-foreground opacity-50" />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium truncate">
+                      {section.title}
                     </p>
-                  )}
-                </div>
-              </Link>
-            ))}
+                    {section.lengthSec && (
+                      <p className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {formatDuration(section.lengthSec)}
+                      </p>
+                    )}
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </ScrollArea>
       </CardContent>

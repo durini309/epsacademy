@@ -160,7 +160,6 @@ export type Database = {
           first_login: boolean
           full_name: string | null
           id: number
-          password: string
         }
         Insert: {
           auth_id?: string | null
@@ -169,7 +168,6 @@ export type Database = {
           first_login?: boolean
           full_name?: string | null
           id?: number
-          password: string
         }
         Update: {
           auth_id?: string | null
@@ -178,7 +176,6 @@ export type Database = {
           first_login?: boolean
           full_name?: string | null
           id?: number
-          password?: string
         }
         Relationships: []
       }
@@ -187,21 +184,18 @@ export type Database = {
           course_id: number
           currnent_lesson_id: number
           id: number
-          progress: number
           user_id: number
         }
         Insert: {
           course_id: number
           currnent_lesson_id: number
           id?: number
-          progress?: number
           user_id: number
         }
         Update: {
           course_id?: number
           currnent_lesson_id?: number
           id?: number
-          progress?: number
           user_id?: number
         }
         Relationships: [
