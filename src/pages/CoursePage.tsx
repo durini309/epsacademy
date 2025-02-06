@@ -1,10 +1,11 @@
+
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TopBar } from "@/components/layout/TopBar";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
-import { ChevronRight, Clock } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { LoadingScreen } from "@/components/ui/loading";
 
@@ -89,7 +90,7 @@ const CoursePage = () => {
               <h1 className="text-3xl font-bold mb-2">{course.name}</h1>
               <p className="text-muted-foreground text-lg">{course.description}</p>
             </div>
-            <div className="w-48 h-32 shrink-0">
+            <div className="w-64 h-48 shrink-0">
               <img 
                 src={course.thumbnail_url} 
                 alt={course.name} 

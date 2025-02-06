@@ -59,12 +59,10 @@ const Hub = () => {
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">
-                      {course.total_lectures} lecciones
+                      {course.total_lessons} lecciones
                     </span>
-                    <span className="text-sm font-medium px-2 py-1 rounded-full bg-primary/10 text-primary">
-                      {course.total_lectures ? 
-                        `${Math.round((0 / course.total_lectures) * 100)}% completado` : 
-                        '0% completado'}
+                    <span className="inline-flex px-4 py-1 rounded-full border border-primary text-primary hover:bg-primary/5 transition-colors">
+                      Navegar
                     </span>
                   </div>
                 </CardContent>
