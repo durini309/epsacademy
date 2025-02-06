@@ -182,19 +182,19 @@ export type Database = {
       user_course: {
         Row: {
           course_id: number
-          currnent_lesson_id: number
+          currnent_lesson_id: number | null
           id: number
           user_id: number
         }
         Insert: {
           course_id: number
-          currnent_lesson_id: number
+          currnent_lesson_id?: number | null
           id?: number
           user_id: number
         }
         Update: {
           course_id?: number
-          currnent_lesson_id?: number
+          currnent_lesson_id?: number | null
           id?: number
           user_id?: number
         }

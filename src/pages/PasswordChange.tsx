@@ -1,10 +1,12 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, AlertCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const PasswordChange = () => {
   const navigate = useNavigate();
@@ -12,10 +14,12 @@ const PasswordChange = () => {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
     try {
       if (password.length < 6) {
@@ -26,7 +30,12 @@ const PasswordChange = () => {
         password: password,
       });
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        if (updateError.message.includes("should be different from the old password")) {
+          throw new Error("Nueva contraseña debe ser diferente a la anterior");
+        }
+        throw updateError;
+      }
 
       const { error: profileError } = await supabase
         .from('user')
@@ -41,7 +50,11 @@ const PasswordChange = () => {
       toast.success("Contraseña actualizada exitosamente");
       navigate("/hub");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Error al actualizar la contraseña");
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : "Lo sentimos, hubo un error. Vuélvelo a intentar";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -56,6 +69,13 @@ const PasswordChange = () => {
             Es necesario que cambies tu contraseña a una que recuerdes. Esta será la contraseña que utilizarás de ahora en adelante.
           </p>
         </div>
+
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           <div className="space-y-4">
