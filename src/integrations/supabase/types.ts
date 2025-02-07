@@ -43,8 +43,9 @@ export type Database = {
           next_lesson_id: number | null
           order: number
           previous_lesson_id: number | null
+          slides_url: string | null
           thumbnail_url: string
-          video_url: string
+          video_url: string | null
         }
         Insert: {
           description: string
@@ -55,8 +56,9 @@ export type Database = {
           next_lesson_id?: number | null
           order: number
           previous_lesson_id?: number | null
+          slides_url?: string | null
           thumbnail_url: string
-          video_url: string
+          video_url?: string | null
         }
         Update: {
           description?: string
@@ -67,8 +69,9 @@ export type Database = {
           next_lesson_id?: number | null
           order?: number
           previous_lesson_id?: number | null
+          slides_url?: string | null
           thumbnail_url?: string
-          video_url?: string
+          video_url?: string | null
         }
         Relationships: [
           {

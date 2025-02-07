@@ -95,7 +95,10 @@ const SectionPage = () => {
       <div className="container py-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           <h1 className="text-3xl font-bold">{currentSection.name}</h1>
-          <VideoPlayer url={currentSection.video_url} />
+          <VideoPlayer 
+            url={currentSection.video_url} 
+            slidesUrl={currentSection.slides_url}
+          />
           <NavigationButtons
             courseId={courseId || ''}
             moduleId={moduleId || ''}
