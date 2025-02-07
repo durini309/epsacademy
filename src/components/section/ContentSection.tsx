@@ -1,12 +1,12 @@
 
 import { PDFViewer } from "./PDFViewer";
 
-interface VideoPlayerProps {
+interface ContentSectionProps {
   url: string | null;
   slidesUrl: string | null;
 }
 
-export const VideoPlayer = ({ url, slidesUrl }: VideoPlayerProps) => {
+export const ContentSection = ({ url, slidesUrl }: ContentSectionProps) => {
   // If there's a video URL, show the video player
   if (url) {
     return (

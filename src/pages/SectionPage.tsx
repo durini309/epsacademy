@@ -2,7 +2,7 @@
 import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { NavigationPanel } from "@/components/section/NavigationPanel";
-import { VideoPlayer } from "@/components/section/VideoPlayer";
+import { ContentSection } from "@/components/section/ContentSection";
 import { ResourcesList } from "@/components/section/ResourcesList";
 import { NavigationButtons } from "@/components/section/NavigationButtons";
 import { TopBar } from "@/components/layout/TopBar";
@@ -95,7 +95,7 @@ const SectionPage = () => {
       <div className="container py-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           <h1 className="text-3xl font-bold">{currentSection.name}</h1>
-          <VideoPlayer 
+          <ContentSection 
             url={currentSection.video_url} 
             slidesUrl={currentSection.slides_url}
           />
