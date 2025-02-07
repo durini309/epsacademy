@@ -59,13 +59,10 @@ const Index = () => {
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <img
-            src="/logo.png"
+            src="/eps-logo.png"
             alt="Logo"
-            className="mx-auto h-16 w-auto"
+            className="mx-auto h-32 w-auto"
           />
-          <h2 className="mt-6 text-3xl font-bold text-foreground">
-            Iniciar Sesión
-          </h2>
         </div>
 
         <form onSubmit={handleLogin} className="mt-8 space-y-6">

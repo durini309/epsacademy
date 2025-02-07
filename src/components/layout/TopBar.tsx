@@ -28,16 +28,15 @@ export const TopBar = () => {
     <div className="border-b">
       <div className="flex h-16 items-center px-4 max-w-7xl mx-auto">
         <a href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded flex items-center justify-center text-primary-foreground font-bold">
-            L
+          <div className="w-8 h-8">
+            <img src="/eps-icon.png" alt="EPS Logo" className="w-full h-full object-contain" />
           </div>
-          <span className="font-semibold">Lovable LMS</span>
         </a>
         
         <div className="ml-auto flex items-center gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="hover:bg-transparent">
                 <Avatar>
                   <AvatarFallback>
                     <UserRound className="h-5 w-5" />

@@ -64,9 +64,9 @@ export const NavigationPanel = ({
                   to={`/course/${courseId}/module/${moduleId}/lesson/${section.id}`}
                   className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
                     isCurrentSection
-                      ? "bg-secondary"
-                      : "hover:bg-secondary/50"
-                  } ${isCurrentSection ? "ring-1 ring-primary" : ""}`}
+                      ? "bg-white/10"
+                      : "hover:bg-white/20"
+                  }`}
                 >
                   <span className="text-lg font-semibold text-muted-foreground w-6 shrink-0 text-center">
                     {section.order}
