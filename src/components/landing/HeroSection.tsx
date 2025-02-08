@@ -1,21 +1,19 @@
 
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
-import Spline from '@splinetool/react-spline';
 
 const HeroSection = () => {
   return (
     <section className="min-h-screen relative flex flex-col items-center justify-center text-center px-4">
-      {/* Spline background */}
-      <div className="absolute inset-0 -z-10">
-        <Spline 
-          scene="https://prod.spline.design/oy6BZwUYvFWAJfhj/scene.splinecode"
-          style={{ 
-            width: '100%', 
-            height: '100%',
-            filter: 'hue-rotate(85deg)' // This adjusts the color to match #34f657
-          }}
-        />
+      {/* Background image with overlay */}
+      <div 
+        className="absolute inset-0 -z-10 bg-cover bg-center"
+        style={{
+          backgroundImage: 'url("/lovable-uploads/b72bc4ff-a630-4a58-b390-d759a4c84e22.png")',
+        }}
+      >
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/60" />
       </div>
       
       {/* Content with backdrop blur for better readability */}
