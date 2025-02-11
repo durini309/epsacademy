@@ -5,18 +5,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 const achievements = [
   {
     icon: Globe2,
-    title: "Work From Anywhere",
-    description: "Break free from geographical constraints and work with global companies.",
+    title: "Trabaja desde donde sea",
+    description: "Ahorrate +400 horas de tráfico y librate de los límites geográficos.",
   },
   {
     icon: Trophy,
-    title: "Competitive Salary",
-    description: "Access international markets and earn what you're truly worth.",
+    title: "Salario competitivo",
+    description: "Accede al mercado internacional y gana lo que en verdad mereces.",
   },
   {
     icon: Users,
-    title: "Global Network",
-    description: "Connect with like-minded developers from around the world.",
+    title: "Red de programadores global",
+    description: "Conecta con developers de toda LATAM que pienan como vos.",
   },
 ];
 
@@ -25,9 +25,9 @@ const AchievementsSection = () => {
     <section className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold font-mono mb-4">What You'll Achieve</h2>
+          <h2 className="text-3xl md:text-4xl font-bold font-mono mb-4">¿Qué vas a lograr?</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Our program is designed to help you achieve your remote work goals through practical skills and real-world strategies.
+            Mi programa está diseñado para ayudarte a lograr tus objetivos de trabajo remoto a través de habilidades prácticas y estrategias reales.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

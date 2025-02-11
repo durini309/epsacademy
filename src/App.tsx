@@ -10,6 +10,9 @@ import Index from "@/pages/Index";
 import NotFound from "@/pages/NotFound";
 import PasswordChange from "@/pages/PasswordChange";
 import Landing from "@/pages/Landing";
+import AboutFramework from "@/pages/AboutFramework";
+import RemoteWorkCourse from "./pages/RemoteWorkCourse";
+import ScrollToTop from "@/components/utils/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -18,8 +21,11 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Router>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<Landing />} />
+            <Route path="/about-framework" element={<AboutFramework />} />
+            <Route path="/about-fundamentos" element={<RemoteWorkCourse />} />
             <Route path="/students-login" element={<Index />} />
             <Route path="/hub" element={<Hub />} />
             <Route path="/course/:courseId" element={<CoursePage />} />
