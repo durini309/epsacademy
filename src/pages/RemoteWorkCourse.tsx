@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, Users, Target, Brain, FileText, Search, Award, ArrowRight } from "lucide-react";
+import { Check, Users, Target, Brain, FileText, Search, Award, ArrowRight, Laptop } from "lucide-react";
 import {
     Accordion,
     AccordionContent,
@@ -14,44 +14,75 @@ const RemoteWorkCourse = () => {
     const targetAudience = [
         {
             icon: Users,
-            title: "Programadores Presenciales",
+            title: "Programadores presenciales",
             description: "Que buscan liberarse de la oficina tradicional"
         },
         {
-            icon: Target,
-            title: "Desarrolladores Ambiciosos",
-            description: "En búsqueda de mejores oportunidades laborales"
+            icon: Laptop,
+            title: "Principiantes",
+            description: "Estudiantes o programadores que buscan su primer trabajo"
         },
         {
             icon: Award,
-            title: "Profesionales Tech",
-            description: "Que merecen ser mejor valorados por su trabajo"
+            title: "Buscas tu mejor versión",
+            description: "Eres apasionado por buscar la mejor versión de ti"
         }
     ];
 
-    const courseContent = [
+    // First, add this to your existing course data at the top of the file
+    const courseModules = [
         {
-            icon: Brain,
-            title: "Soft Skills",
-            description: "Habilidades cruciales para el trabajo remoto"
+            title: "Introducción al trabajo remoto",
+            lessons: [
+                "Introducción al curso - ¿Quién soy yo? ¿Por qué estás aquí? ¿Qué aprenderás?",
+                "Situación del mercado - ¿Cuál es la situación actual? ¿En verdad está tan saturado?",
+                "Introducción a las Soft Skills - ¿Qué son y por qué son tan importantes?",
+                "Comunicación efectiva - Aprende a comunicarte profesionalmente en equipos distribuidos", 
+                "Trabajo en equipo remoto - Técnicas para colaborar efectivamente a distancia",
+                "Aprendizaje continuo - Desarrolla una mentalidad de crecimiento y mejora constante",
+                "Productividad personal - Domina la gestión del tiempo y enfoque en entornos remotos"
+            ]
         },
         {
-            icon: FileText,
-            title: "CV y Portafolio",
-            description: "Sabrás cómo crear un portafolio atractivo y un CV optimizado para ATS"
+            title: "Carrera profesional y mentalidad",
+            lessons: [
+                "Superando limitaciones mentales - Identifica y supera las barreras que te detienen",
+                "Mentalidad de crecimiento - Aprende a disfrutar el proceso de desarrollo profesional",
+                "Tu carrera como negocio - Gestiona tu carrera de manera estratégica y profesional",
+                "Opciones de carrera remota - Explora los diferentes caminos profesionales disponibles",
+                "Planificación estratégica - Crea un plan concreto para alcanzar tus metas profesionales"
+            ]
         },
         {
-            icon: Search,
-            title: "Búsqueda Efectiva",
-            description: "Estrategias en LinkedIn y otras plataformas"
+            title: "Vendiéndonos",
+            lessons: [
+                "Networking estratégico - Construye una red profesional que potencie tu carrera",
+                "CV optimizado - Crea un currículum que obtenga puntajes altos en los ATS",
+                "Portafolio profesional - Desarrolla un portafolio que demuestre tu valor",
+                "Presencia en LinkedIn - Optimiza tu perfil para destacar en la plataforma",
+                "Construcción de marca personal - Establece una presencia profesional memorable"
+            ]
         },
+        {
+            title: "Búsqueda de trabajo efectiva",
+            lessons: [
+                "Estrategias avanzadas - Supera los métodos tradicionales de búsqueda",
+                "Domina LinkedIn - Técnicas efectivas para encontrar oportunidades ideales",
+                "Protégete de estafas - Identifica y evita ofertas fraudulentas",
+                "Plataformas alternativas - Explora otras fuentes de oportunidades remotas",
+                "Tracking de aplicaciones - Crea un sistema para monitorear tus aplicaciones",
+                "Preparación de entrevistas - Domina los diferentes tipos de entrevistas remotas",
+                "Negociación efectiva - Aprende a negociar compensaciones competitivas"
+            ]
+        }
     ];
 
     const outcomes = [
-        "Dominio de habilidades no técnicas para trabajo remoto",
-        "Capacidad de aspirar a sueldos competitivos",
-        "Presencia profesional destacada",
-        "Herramientas para búsqueda efectiva",
+        "Dominarás las soft skills más valoradas en empresas remotas, destacando entre otros candidatos",
+        "Aprenderás a posicionarte en el mercado remoto para acceder a mejores compensaciones",
+        "Desarrollarás una marca personal que atraerá oportunidades laborales de calidad",
+        "Dominarás estrategias probadas para buscar y conseguir trabajo remoto efectivamente",
+        "Navegarás con confianza procesos de entrevista y negociación en empresas internacionales"
     ];
 
     const faqs = [
@@ -153,22 +184,60 @@ const RemoteWorkCourse = () => {
                 </div>
             </section>
 
+
+
+
             {/* Course Content */}
             <section className="py-20 px-4 bg-secondary/20">
                 <div className="max-w-6xl mx-auto">
                     <h2 className="text-3xl font-bold font-mono text-center mb-12">
-                        ¿Qué aprenderás?
+                        Contenido del curso
                     </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {courseContent.map((item) => (
-                            <div key={item.title} className="flex gap-4">
-                                <item.icon className="w-8 h-8 text-primary shrink-0" />
-                                <div>
-                                    <h3 className="font-bold mb-2">{item.title}</h3>
-                                    <p className="text-muted-foreground">{item.description}</p>
-                                </div>
-                            </div>
-                        ))}
+                    <div className="max-w-4xl mx-auto text-center mb-12 space-y-4">
+                        <p className="text-lg text-muted-foreground">
+                            Este curso ha sido diseñado para guiarte paso a paso en tu camino hacia el trabajo remoto. A través de 4 módulos cuidadosamente estructurados, aprenderás desde los fundamentos esenciales hasta las estrategias más efectivas para destacar en el mercado laboral remoto.
+                        </p>
+                        <p className="text-lg text-muted-foreground">
+                            Cada módulo se construye sobre el anterior, proporcionándote una base sólida y las herramientas necesarias para transformar tu carrera. El contenido está enfocado en aspectos prácticos y accionables, permitiéndote implementar lo aprendido de manera inmediata.
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-1 gap-6 max-w-4xl mx-auto">
+                        <Accordion type="single" collapsible className="space-y-4">
+                            {courseModules.map((module, moduleIndex) => (
+                                <AccordionItem
+                                    key={moduleIndex}
+                                    value={`module-${moduleIndex}`}
+                                    className="border border-primary/20 bg-secondary/20 data-[state=open]:bg-secondary/40 transition-colors duration-300"
+                                >
+                                    <AccordionTrigger className="px-6 py-4 hover:no-underline group">
+                                        <div className="flex items-start gap-4 text-left">
+                                            <div className="bg-primary/10 text-primary font-mono rounded-full w-8 h-8 flex items-center justify-center shrink-0">
+                                                {moduleIndex + 1}
+                                            </div>
+                                            <div>
+                                                <h3 className="font-bold text-lg">{module.title}</h3>
+                                                <p className="text-sm text-muted-foreground">
+                                                    {module.lessons.length} lecciones
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </AccordionTrigger>
+                                    <AccordionContent className="px-6 pb-4">
+                                        <ul className="space-y-3 ml-12">
+                                            {module.lessons.map((lesson, lessonIndex) => (
+                                                <li
+                                                    key={lessonIndex}
+                                                    className="text-muted-foreground flex items-center gap-2"
+                                                >
+                                                    <span className="text-primary">✓</span>
+                                                    {lesson}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </AccordionContent>
+                                </AccordionItem>
+                            ))}
+                        </Accordion>
                     </div>
                     <div className="mt-12 text-center">
                         <a
@@ -233,12 +302,12 @@ const RemoteWorkCourse = () => {
                                 Nota: Este es un curso introductorio. Para una transformación más profunda y coaching personalizado, consulta el programa completo "El Programador Superior".
                             </p>
                             <div className="flex flex-row w-full justify-end">
-                            <Link to="/about-framework">
-                                <Button variant="link" className="text-primary">
-                                    Conoce más
-                                    <ArrowRight className="ml-2 w-4 h-4" />
-                                </Button>
-                            </Link>
+                                <Link to="/about-framework">
+                                    <Button variant="link" className="text-primary">
+                                        Conoce más
+                                        <ArrowRight className="ml-2 w-4 h-4" />
+                                    </Button>
+                                </Link>
                             </div>
                         </CardContent>
                     </Card>
