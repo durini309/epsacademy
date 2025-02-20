@@ -44,35 +44,24 @@ const RemoteWorkCourse = () => {
             ]
         },
         {
-            title: "Carrera profesional y mentalidad",
-            lessons: [
-                "Superando limitaciones mentales - Identifica y supera las barreras que te detienen",
-                "Mentalidad de crecimiento - Aprende a disfrutar el proceso de desarrollo profesional",
-                "Tu carrera como negocio - Gestiona tu carrera de manera estratégica y profesional",
-                "Opciones de carrera remota - Explora los diferentes caminos profesionales disponibles",
-                "Planificación estratégica - Crea un plan concreto para alcanzar tus metas profesionales"
-            ]
-        },
-        {
             title: "Vendiéndonos",
             lessons: [
+                "Tu carrera como negocio - Gestiona tu carrera de manera estratégica y profesional",
+                "Planificación estratégica - Crea un plan concreto para alcanzar tus metas profesionales",
                 "Networking estratégico - Construye una red profesional que potencie tu carrera",
                 "CV optimizado - Crea un currículum que obtenga puntajes altos en los ATS",
                 "Portafolio profesional - Desarrolla un portafolio que demuestre tu valor",
                 "Presencia en LinkedIn - Optimiza tu perfil para destacar en la plataforma",
-                "Construcción de marca personal - Establece una presencia profesional memorable"
             ]
         },
         {
             title: "Búsqueda de trabajo efectiva",
             lessons: [
-                "Estrategias avanzadas - Supera los métodos tradicionales de búsqueda",
                 "Domina LinkedIn - Técnicas efectivas para encontrar oportunidades ideales",
                 "Protégete de estafas - Identifica y evita ofertas fraudulentas",
                 "Plataformas alternativas - Explora otras fuentes de oportunidades remotas",
                 "Tracking de aplicaciones - Crea un sistema para monitorear tus aplicaciones",
-                "Preparación de entrevistas - Domina los diferentes tipos de entrevistas remotas",
-                "Negociación efectiva - Aprende a negociar compensaciones competitivas"
+                "Preparación de entrevistas - Domina los diferentes tipos de entrevistas remotas"
             ]
         }
     ];
@@ -80,7 +69,6 @@ const RemoteWorkCourse = () => {
     const outcomes = [
         "Dominarás las soft skills más valoradas en empresas remotas, destacando entre otros candidatos",
         "Aprenderás a posicionarte en el mercado remoto para acceder a mejores compensaciones",
-        "Desarrollarás una marca personal que atraerá oportunidades laborales de calidad",
         "Dominarás estrategias probadas para buscar y conseguir trabajo remoto efectivamente",
         "Navegarás con confianza procesos de entrevista y negociación en empresas internacionales"
     ];
