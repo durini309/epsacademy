@@ -22,6 +22,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Router>
+          <Analytics/>
           <ScrollToTop />
           <Routes>
             <Route path="/" element={<Landing />} />
@@ -36,7 +37,6 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
-        <Analytics/>
       </TooltipProvider>
     </QueryClientProvider>
   );
