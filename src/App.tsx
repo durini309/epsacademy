@@ -2,6 +2,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Analytics } from '@vercel/analytics/react';
 import Hub from "@/pages/Hub";
 import CoursePage from "@/pages/CoursePage";
 import ModulePage from "@/pages/ModulePage";
@@ -35,6 +36,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
+        <Analytics/>
       </TooltipProvider>
     </QueryClientProvider>
   );
