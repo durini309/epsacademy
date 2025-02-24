@@ -29,18 +29,13 @@ const RemoteWorkCourse = () => {
         }
     ];
 
-    // First, add this to your existing course data at the top of the file
     const courseModules = [
         {
             title: "Introducción al trabajo remoto",
             lessons: [
                 "Introducción al curso - ¿Quién soy yo? ¿Por qué estás aquí? ¿Qué aprenderás?",
                 "Situación del mercado - ¿Cuál es la situación actual? ¿En verdad está tan saturado?",
-                "Introducción a las Soft Skills - ¿Qué son y por qué son tan importantes?",
-                "Comunicación efectiva - Aprende a comunicarte profesionalmente en equipos distribuidos", 
-                "Trabajo en equipo remoto - Técnicas para colaborar efectivamente a distancia",
-                "Aprendizaje continuo - Desarrolla una mentalidad de crecimiento y mejora constante",
-                "Productividad personal - Domina la gestión del tiempo y enfoque en entornos remotos"
+                "Introducción a las Soft Skills - ¿Qué son y por qué son tan importantes?"
             ]
         },
         {
@@ -58,7 +53,6 @@ const RemoteWorkCourse = () => {
             title: "Búsqueda de trabajo efectiva",
             lessons: [
                 "Domina LinkedIn - Técnicas efectivas para encontrar oportunidades ideales",
-                "Protégete de estafas - Identifica y evita ofertas fraudulentas",
                 "Plataformas alternativas - Explora otras fuentes de oportunidades remotas",
                 "Tracking de aplicaciones - Crea un sistema para monitorear tus aplicaciones",
                 "Preparación de entrevistas - Domina los diferentes tipos de entrevistas remotas"
@@ -67,10 +61,10 @@ const RemoteWorkCourse = () => {
     ];
 
     const outcomes = [
-        "Dominarás las soft skills más valoradas en empresas remotas, destacando entre otros candidatos",
         "Aprenderás a posicionarte en el mercado remoto para acceder a mejores compensaciones",
         "Dominarás estrategias probadas para buscar y conseguir trabajo remoto efectivamente",
-        "Navegarás con confianza procesos de entrevista y negociación en empresas internacionales"
+        "Navegarás con confianza procesos de entrevista y negociación en empresas internacionales",
+        "Tendrás un 25% de descuento en mi programa de mentorías, donde te convertirás en un programador altamente valioso"
     ];
 
     const faqs = [
@@ -183,7 +177,7 @@ const RemoteWorkCourse = () => {
                     </h2>
                     <div className="max-w-4xl mx-auto text-center mb-12 space-y-4">
                         <p className="text-lg text-muted-foreground">
-                            Este curso ha sido diseñado para guiarte paso a paso en tu camino hacia el trabajo remoto. A través de 4 módulos cuidadosamente estructurados, aprenderás desde los fundamentos esenciales hasta las estrategias más efectivas para destacar en el mercado laboral remoto.
+                            Este curso ha sido diseñado para guiarte paso a paso en tu camino hacia el trabajo remoto. A través de 3 módulos cuidadosamente estructurados, aprenderás desde los fundamentos esenciales hasta las estrategias más efectivas para destacar en el mercado laboral remoto.
                         </p>
                         <p className="text-lg text-muted-foreground">
                             Cada módulo se construye sobre el anterior, proporcionándote una base sólida y las herramientas necesarias para transformar tu carrera. El contenido está enfocado en aspectos prácticos y accionables, permitiéndote implementar lo aprendido de manera inmediata.
