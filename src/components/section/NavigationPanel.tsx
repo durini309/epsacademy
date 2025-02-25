@@ -71,7 +71,7 @@ export const NavigationPanel = ({
                   <span className="text-lg font-semibold text-muted-foreground w-6 shrink-0 text-center">
                     {section.order}
                   </span>
-                  <div className="w-24 h-16 bg-muted rounded flex items-center justify-center shrink-0 overflow-hidden">
+                  <div className="w-36 h-24 bg-muted rounded flex items-center justify-center shrink-0 overflow-hidden">
                     {section.thumbnailUrl ? (
                       <img 
                         src={section.thumbnailUrl} 

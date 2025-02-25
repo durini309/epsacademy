@@ -27,7 +27,7 @@ export const TopBar = () => {
   return (
     <div className="border-b">
       <div className="flex h-16 items-center px-4 max-w-7xl mx-auto">
-        <a href="/" className="flex items-center gap-2">
+        <a href="/hub" className="flex items-center gap-2">
           <div className="w-8 h-8">
             <img src="/eps-icon.png" alt="EPS Logo" className="w-full h-full object-contain" />
           </div>

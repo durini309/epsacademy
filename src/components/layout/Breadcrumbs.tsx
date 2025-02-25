@@ -83,7 +83,7 @@ export const Breadcrumbs = () => {
     
     acc.push({ href: path, label });
     return acc;
-  }, [{ href: "/", label: "Home" }]);
+  }, [{ href: "/hub", label: "Home" }]);
 
   return (
     <Breadcrumb className="max-w-4xl mx-auto px-4 py-6">
@@ -96,7 +96,7 @@ export const Breadcrumbs = () => {
               ) : (
                 <BreadcrumbLink asChild>
                   <Link to={item.href}>
-                    {item.href === "/" ? (
+                    {item.href === "/hub" ? (
                       <Home className="h-4 w-4" />
                     ) : (
                       item.label

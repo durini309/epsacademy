@@ -104,7 +104,7 @@ const CoursePage = () => {
         {currentLesson && (
           <div className="bg-secondary/5 rounded-lg">
             <div className="flex items-center gap-4 p-4">
-              <div className="w-24 h-16 bg-secondary rounded overflow-hidden shrink-0">
+              <div className="w-40 h-24 bg-secondary rounded overflow-hidden shrink-0">
                 <img 
                   src={currentLesson.thumbnail_url} 
                   alt={currentLesson.name}
